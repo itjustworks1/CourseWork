@@ -126,10 +126,10 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid Margin="10">
-                    <ComboBox Name="cb1" ItemsSource="{Binding ProductParameters}" SelectedItem="{Binding SelectedProductParameter.Parameter}" FontSize="16">
+                    <ComboBox Name="cb1" ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedProductParameter.Parameter}" FontSize="16">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Parameter.Title}"/>
+                                <TextBlock Text="{Binding Title}"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

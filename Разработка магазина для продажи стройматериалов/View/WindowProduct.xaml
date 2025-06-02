@@ -34,24 +34,37 @@
                 <TextBlock Text="шт" VerticalAlignment="Bottom" FontSize="16"/>
             </StackPanel>
         </StackPanel>
-        <ListBox ItemsSource="{Binding ProductParameters}" Margin="10" Grid.Row="2">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock HorizontalAlignment="Center" Text="{Binding SelectedProduct.ProductType.Title}" Margin="10" FontSize="20"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Column="2">
+                    <TextBlock Text="{Binding SelectedProduct.Value}" Margin="10" FontSize="20"/>
+                    <TextBlock VerticalAlignment="Bottom" Text="руб" Margin="0,10" FontSize="16"/>
+                </StackPanel>
+            </Grid>
+            <ListBox ItemsSource="{Binding ProductParameters}" Margin="10">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
                         <Grid>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Parameter.Title}" FontSize="20"/>
-                                <TextBlock Text=":  "  FontSize="20"/>
-                                <TextBlock Text="{Binding Meaning}" FontSize="20"/>
-                            </StackPanel>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Parameter.Title}" FontSize="20"/>
+                                    <TextBlock Text=":  "  FontSize="20"/>
+                                    <TextBlock Text="{Binding Meaning}" FontSize="20"/>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
     </Grid>
 </Window>

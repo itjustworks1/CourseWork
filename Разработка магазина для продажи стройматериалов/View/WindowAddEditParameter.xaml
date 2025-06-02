@@ -13,7 +13,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel>
             <Grid Margin="10">
-                <TextBox Name="tb12" Text="{Binding SelectedParameter.Title}" FontSize="16"/>
+                <TextBox Name="tb12" Text="{Binding SelectedParameter.Title, UpdateSourceTrigger=PropertyChanged}" FontSize="16"/>
             </Grid>
             <Button Content="Добавить" Command="{Binding AddParameter}" Margin="10" FontSize="16"/>
             <Button Content="Редактировать" Command="{Binding EditParameter}" Margin="10" FontSize="16"/>

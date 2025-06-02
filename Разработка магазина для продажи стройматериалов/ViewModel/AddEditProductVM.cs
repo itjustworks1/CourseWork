@@ -20,7 +20,9 @@ namespace Разработка_магазина_для_продажи_строй
         private ObservableCollection<ProductParameter> productParameters = new();
         private ProductParameter selectedProductParameter;
         private ObservableCollection<ProductParameter> selectedProductParameters = new();
+        private ObservableCollection<Parameter> parameters = new();
 
+        public ObservableCollection<Parameter> Parameters { get => parameters; set { parameters = value; Signal(); } }
         public ObservableCollection<ProductParameter> SelectedProductParameters { get => selectedProductParameters; set { selectedProductParameters = value; Signal(); } }
         public ProductParameter SelectedProductParameter { get => selectedProductParameter; set { selectedProductParameter = value; Signal(); } }
         public ObservableCollection<ProductParameter> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
@@ -110,6 +112,7 @@ namespace Разработка_магазина_для_продажи_строй
                 SelectedProduct.ProductType = ProductTypes.FirstOrDefault(s => s.Id == SelectedProduct.ProductTypeId);
             ProductParameters = new ObservableCollection<ProductParameter>(ProductParameterDB.GetDB().SelectAll());
             SelectedProductParameters = new ObservableCollection<ProductParameter>(ProductParameterDB.GetDB().SelectAll().Where(s => s.ProductId == SelectedProduct.Id));
+            Parameters = new ObservableCollection<Parameter>(ParameterDB.GetDB().SelectAll());
 
         }
         Action close;
