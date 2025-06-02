@@ -1,0 +1,30 @@
+﻿<Window x:Class="Разработка_магазина_для_продажи_стройматериалов.View.WindowAddEditParameter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов.View"
+        mc:Ignorable="d"
+        Title="Управление параметрами" Height="350" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Grid Margin="10">
+                <TextBox Name="tb12" Text="{Binding SelectedParameter.Title}" FontSize="16"/>
+            </Grid>
+            <Button Content="Добавить" Command="{Binding AddParameter}" Margin="10" FontSize="16"/>
+            <Button Content="Редактировать" Command="{Binding EditParameter}" Margin="10" FontSize="16"/>
+            <Button Content="Удалить" Command="{Binding RemoveParameter}" Margin="10" FontSize="16"/>
+        </StackPanel>
+        <ListView ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameter}" Grid.Column="1" FontSize="16">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Параметр" DisplayMemberBinding="{Binding Title}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
