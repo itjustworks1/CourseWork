@@ -16,7 +16,9 @@ namespace Разработка_магазина_для_продажи_строй
         private Product selectedProduct;
         private ObservableCollection<Product> products = new();
         private ObservableCollection<ProductParameter> productParameters = new();
+        private OrderStructure orderStructure = new();
 
+        public OrderStructure OrderStructure { get => orderStructure; set { orderStructure = value; Signal(); } }
         public ObservableCollection<ProductParameter> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
         public ObservableCollection<Product> Products { get => products; set { products = value; Signal(); } }
         public Product SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
@@ -59,6 +61,11 @@ namespace Разработка_магазина_для_продажи_строй
         {
             Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
             ProductParameters = new ObservableCollection<ProductParameter>(ProductParameterDB.GetDB().SelectAll().Where(s => s.ProductId == SelectedProduct.Id));
+            ObservableCollection<Order> orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll());
+            Order order = orders.FirstOrDefault(s => s.Status == false);
+            ObservableCollection<OrderStructure> orderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SelectAll().Where(s => s.OrderId == order.Id));
+            OrderStructure = orderStructures.FirstOrDefault(s => s.ProductId == SelectedProduct.Id);
+            if (OrderStructure == null) OrderStructure = new OrderStructure(){ Quantity = 0 };
         }
         Action close;
 

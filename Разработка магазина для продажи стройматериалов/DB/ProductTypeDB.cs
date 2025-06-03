@@ -17,32 +17,6 @@ namespace Разработка_магазина_для_продажи_строй
         {
             this.connection = db;
         }
-        public List<ProductType> SearchEquipment(string search)
-        {
-            List<ProductType> productTypes = new();
-
-            string Ы = $"SELECT * FROM ProductType pt";
-            if (connection.OpenConnection())
-            {
-                using (var mc = connection.CreateCommand(Ы))
-                {
-                    mc.Parameters.Add(new MySqlParameter("search", $"%{search}%"));
-                    using (var dr = mc.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            var productType = new ProductType();
-                            productType.Id = dr.GetInt32("Id");
-                            productType.Title = dr.GetString("Title");
-                            productTypes.Add(productType);
-
-                        }
-                    }
-                    connection.CloseConnection();
-                }
-            }
-            return productTypes;
-        }
         public bool Insert(ProductType productType)
         {
             bool result = false;
@@ -86,6 +60,30 @@ namespace Разработка_магазина_для_продажи_строй
                             Title = Title
                         });
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            connection.CloseConnection();
+            return result;
+        }
+        internal bool Update(ProductType edit)
+        {
+            bool result = false;
+            if (connection == null)
+                return result;
+
+            if (connection.OpenConnection())
+            {
+                var cmd = connection.CreateCommand($"update `ProductType` set `Title`=@Title where `Id` = {edit.Id}");
+                cmd.Parameters.Add(new MySqlParameter("Title", edit.Title));
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    result = true;
                 }
                 catch (Exception ex)
                 {

@@ -17,9 +17,13 @@ namespace Разработка_магазина_для_продажи_строй
         private Parameter selectedParameter;
         private ObservableCollection<ProductType> productTypes = new();
         private ObservableCollection<Parameter> parameters = new();
-        private ObservableCollection<ProductTypeParameter> selectedParameters = new();
+        private ObservableCollection<ProductTypeParameter> productTypeParameters = new();
+        private ObservableCollection<ProductTypeParameter> selectedProductTypeParametersOnProductType = new();
+        private ProductTypeParameter selectedProductTypeParameter = new();
 
-        public ObservableCollection<ProductTypeParameter> SelectedParameters { get => selectedParameters; set { selectedParameters = value; Signal(); } }
+        public ProductTypeParameter SelectedProductTypeParameter { get => selectedProductTypeParameter; set { selectedProductTypeParameter = value; Signal(); } }
+        public ObservableCollection<ProductTypeParameter> ProductTypeParameters { get => productTypeParameters; set { productTypeParameters = value; Signal(); } }
+        public ObservableCollection<ProductTypeParameter> SelectedProductTypeParametersOnProductType { get => selectedProductTypeParametersOnProductType; set { selectedProductTypeParametersOnProductType = value; Signal(); } }
         public ObservableCollection<Parameter> Parameters { get => parameters; set { parameters = value; Signal(); } }
         public ObservableCollection<ProductType> ProductTypes { get => productTypes; set { productTypes = value; Signal(); } }
         public Parameter SelectedParameter { get => selectedParameter; set { selectedParameter = value; Signal(); } }
@@ -37,11 +41,29 @@ namespace Разработка_магазина_для_продажи_строй
         {
             SelectedProductType = new ProductType();
             SelectAll();
+            AddProductType = new CommandMvvm(() =>
+            {
+                ProductTypeDB.GetDB().Insert(SelectedProductType);
+                SelectAll();
+            }, () => !string.IsNullOrEmpty(SelectedProductType.Title));
+
+            EditProductType = new CommandMvvm(() =>
+            {
+                ProductTypeDB.GetDB().Update(SelectedProductType);
+                SelectAll();
+            }, () => !string.IsNullOrEmpty(SelectedProductType.Title));
+
+            RemoveProductType = new CommandMvvm(() =>
+            {
+
+                SelectAll();
+            }, () => !string.IsNullOrEmpty(SelectedProductType.Title));
+
             AddParameter = new CommandMvvm(() =>
             {
 
                 SelectAll();
-            }, () => SelectedParameter != null);
+            }, () => SelectedProductType != null);
 
             EditParameter = new CommandMvvm(() =>
             {
@@ -55,26 +77,6 @@ namespace Разработка_магазина_для_продажи_строй
                 SelectAll();
             }, () => SelectedParameter != null);
 
-            //
-            AddParameter = new CommandMvvm(() =>
-            {
-                ParameterDB.GetDB().Insert(SelectedParameter);
-                SelectAll();
-            }, () => SelectedParameter != null);
-
-            EditParameter = new CommandMvvm(() =>
-            {
-
-                SelectAll();
-            }, () => true);
-
-            RemoveParameter = new CommandMvvm(() =>
-            {
-
-                SelectAll();
-            }, () => SelectedParameter != null);
-
-            //
             OpenAddEditParameter = new CommandMvvm(() =>
             {
                 new WindowAddEditParameter().ShowDialog();
@@ -87,7 +89,8 @@ namespace Разработка_магазина_для_продажи_строй
         {
             ProductTypes = new ObservableCollection<ProductType>(ProductTypeDB.GetDB().SelectAll());
             Parameters = new ObservableCollection<Parameter>(ParameterDB.GetDB().SelectAll());
-            //SelectedParameters = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll().Where(s => s.ProductTypeId == SelectedProductType.Id));
+            ProductTypeParameters = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll());
+            //selectedProductTypeParametersOnProductType = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll());
         }
     }
 }

@@ -76,13 +76,13 @@ namespace Разработка_магазина_для_продажи_строй
             !string.IsNullOrEmpty(SelectedProductParameter.Meaning) &&
             SelectedProductParameter.Parameter != null
             );
-            //
+
             OpenAddEditProductType = new CommandMvvm(() => 
             {
                 new WindowAddEditProductType().ShowDialog();
                 SelectAll();
             }, () => true);
-            //
+
             Save = new CommandMvvm(() =>
             {
                 SelectedProduct.ProductTypeId = SelectedProduct.ProductType.Id;
