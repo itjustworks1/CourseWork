@@ -96,27 +96,52 @@ namespace Разработка_магазина_для_продажи_строй
             return db;
         }
 
-        //internal bool Remove(Product selectedProduct)
-        //{
-        //    bool result = false;
-        //    if (connection == null)
-        //        return result;
+        internal bool UpdateParameter(ProductTypeParameter edit, Parameter parameter)
+        {
+            bool result = false;
+            if (connection == null)
+                return result;
 
-        //    if (connection.OpenConnection())
-        //    {
-        //        var mc = connection.CreateCommand($"delete from `ProductTypeParameter` where `id` = {selectedProduct.Id}");
-        //        try
-        //        {
-        //            mc.ExecuteNonQuery();
-        //            result = true;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.Message);
-        //        }
-        //    }
-        //    connection.CloseConnection();
-        //    return result;
-        //}
+            if (connection.OpenConnection())
+            {
+                var cmd = connection.CreateCommand($"update `ProductTypeParameter` set `ProductTypeId`=@ProductTypeId, `ParameterId`=@ParameterId where `ProductTypeId` = {edit.ProductTypeId} AND `ParameterId` = {parameter.Id}");
+                cmd.Parameters.Add(new MySqlParameter("ProductTypeId", edit.ProductTypeId));
+                cmd.Parameters.Add(new MySqlParameter("ParameterId", edit.ParameterId));
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            connection.CloseConnection();
+            return result;
+        }
+        internal bool Remove(ProductTypeParameter selectedProductTypeParameter)
+        {
+            bool result = false;
+            if (connection == null)
+                return result;
+
+            if (connection.OpenConnection())
+            {
+                var mc = connection.CreateCommand($"delete from `ProductTypeParameter` where `ProductTypeId` = {selectedProductTypeParameter.ProductTypeId} AND `ParameterId` = {selectedProductTypeParameter.ParameterId}");
+                try
+                {
+                    mc.ExecuteNonQuery();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            connection.CloseConnection();
+            return result;
+        }
     }
 }

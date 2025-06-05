@@ -102,7 +102,7 @@ namespace Разработка_магазина_для_продажи_строй
 
             if (connection.OpenConnection())
             {
-                var cmd = connection.CreateCommand($"update `Product` set `Title`=@Title where `Id` = {edit.Id}");
+                var cmd = connection.CreateCommand($"update `Parameter` set `Title`=@Title where `Id` = {edit.Id}");
                 cmd.Parameters.Add(new MySqlParameter("Title", edit.Title));
 
                 try

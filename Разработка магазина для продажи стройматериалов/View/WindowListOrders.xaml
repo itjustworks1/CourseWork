@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов.View"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Список заказов" Height="450" Width="800">
+        Title="Список заказов" Height="450" Width="400">
     <Grid>
         <ListBox ItemsSource="{Binding OrdersWithoutCart}" SelectedItem="{Binding SelectedOrder}" Margin="10">
             <ListBox.ItemTemplate>
@@ -24,21 +24,15 @@
                             <Border BorderThickness="1" BorderBrush="Black">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="500"/>
-                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="200"/>
                                         <ColumnDefinition Width="60"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding Date}" VerticalAlignment="Center" FontSize="20">
                                         <TextBlock.InputBindings>
                                             <MouseBinding MouseAction="LeftDoubleClick"
-                                  Command="{Binding DataContext.OpenOrder, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                   />
+                                  Command="{Binding DataContext.OpenOrder, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
                                         </TextBlock.InputBindings>
                                     </TextBlock>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="2">
-                                        <TextBlock Text="{Binding Status}" FontSize="16"/>
-                                        <TextBlock Text="шт"  FontSize="16"/>
-                                    </StackPanel>
                                 </Grid>
                             </Border>
                             <!--AddToCart-->

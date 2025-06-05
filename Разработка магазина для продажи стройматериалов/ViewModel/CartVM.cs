@@ -29,6 +29,7 @@ namespace Разработка_магазина_для_продажи_строй
         public CommandMvvm PlaceAnOrder { get; set; }
         public CommandMvvm RemoveFromCart { get; set; }
         public CommandMvvm OpenOrder { get; set; }
+        public CommandMvvm OpenProduct { get; set; }
 
         public CartVM()
         {
@@ -57,6 +58,12 @@ namespace Разработка_магазина_для_продажи_строй
                 new WindowListOrders().ShowDialog();
                 SelectAll();
             }, () => true);
+
+            OpenProduct = new CommandMvvm(() =>
+            {
+                new WindowProduct(SelectedOrderStructure.Product).ShowDialog();
+                SelectAll();
+            }, () => SelectedOrderStructure != null);
         }
 
         private void SelectAll()

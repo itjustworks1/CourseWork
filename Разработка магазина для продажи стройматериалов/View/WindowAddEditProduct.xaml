@@ -204,7 +204,7 @@
 
         <StackPanel Grid.Column="1">
             <Button Content="Открыть окно управления параметрами" Command="{Binding OpenAddEditProductType}" Margin="10" FontSize="16"/>
-            <ListView ItemsSource="{Binding SelectedProductParameters}" SelectedItem="{Binding SelectedProductParameter}" Margin="10" FontSize="16">
+            <ListView ItemsSource="{Binding SelectedSelectedProductParameters}" SelectedItem="{Binding SelectedProductParameter}" Margin="10" FontSize="16">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Название параметра" Width="200" DisplayMemberBinding="{Binding Parameter.Title}"/>

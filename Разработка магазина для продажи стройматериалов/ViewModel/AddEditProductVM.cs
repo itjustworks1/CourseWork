@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Разработка_магазина_для_продажи_стройматериалов.DB;
 using Разработка_магазина_для_продажи_стройматериалов.Model;
 using Разработка_магазина_для_продажи_стройматериалов.View;
@@ -16,12 +17,13 @@ namespace Разработка_магазина_для_продажи_строй
         private ObservableCollection<ProductType> productTypes = new();
         private Product selectedProduct;
         private ObservableCollection<Product> products = new();
-        private string search;
         private ObservableCollection<ProductParameter> productParameters = new();
         private ProductParameter selectedProductParameter;
         private ObservableCollection<ProductParameter> selectedProductParameters = new();
         private ObservableCollection<Parameter> parameters = new();
+        private ObservableCollection<ProductParameter> selectedSelectedProductParameters = new();
 
+        public ObservableCollection<ProductParameter> SelectedSelectedProductParameters { get => selectedSelectedProductParameters; set { selectedSelectedProductParameters = value; Signal(); } }
         public ObservableCollection<Parameter> Parameters { get => parameters; set { parameters = value; Signal(); } }
         public ObservableCollection<ProductParameter> SelectedProductParameters { get => selectedProductParameters; set { selectedProductParameters = value; Signal(); } }
         public ProductParameter SelectedProductParameter { get => selectedProductParameter; set { selectedProductParameter = value; Signal(); } }
@@ -40,8 +42,8 @@ namespace Разработка_магазина_для_продажи_строй
         public AddEditProductVM(Product product)
         {
             SelectedProduct = product;
-            SelectedProductParameter = new ProductParameter();
             SelectAll();
+            SelectedSelectedProductParameters = SelectedProductParameters;
             AddParameter = new CommandMvvm(() =>
             {
                 ProductParameter productParameter = new ProductParameter();
@@ -50,31 +52,37 @@ namespace Разработка_магазина_для_продажи_строй
                 productParameter.ParameterId = productParameter.Parameter.Id;
                 productParameter.Product = SelectedProduct;
                 productParameter.ProductId = SelectedProduct.Id;
-                ProductParameterDB.GetDB().Insert(productParameter);
+                SelectedSelectedProductParameters.Add(productParameter);
                 SelectAll();
             }, () =>
-            !string.IsNullOrEmpty(SelectedProductParameter.Meaning) &&
-            SelectedProductParameter.Parameter != null
+            SelectedProductParameter.Parameter != null &&
+            !string.IsNullOrEmpty(SelectedProductParameter.Meaning)
             );
 
             EditParameter = new CommandMvvm(() =>
             {
-                ProductParameterDB.GetDB().Update(SelectedProductParameter);
+                for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
+                    if (SelectedSelectedProductParameters[i] == SelectedProductParameter)
+                        SelectedSelectedProductParameters[i] = SelectedProductParameter;
                 SelectAll();
             }, () =>
             SelectedProductParameter != null &&
-            !string.IsNullOrEmpty(SelectedProductParameter.Meaning) &&
-            SelectedProductParameter.Parameter != null
+            SelectedProductParameter.Parameter != null &&
+            !string.IsNullOrEmpty(SelectedProductParameter.Meaning)
             );
 
             RemoveParameter = new CommandMvvm(() =>
             {
-                ProductParameterDB.GetDB().Remove(SelectedProductParameter);
+                for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
+                    if (SelectedSelectedProductParameters[i] == SelectedProductParameter)
+                        SelectedSelectedProductParameters.Remove(SelectedSelectedProductParameters[i]);
+                // при синхронизации удаляет оба
                 SelectAll();
+                // при обновлении они рассинхронизируются
             }, () =>
             SelectedProductParameter != null &&
-            !string.IsNullOrEmpty(SelectedProductParameter.Meaning) &&
-            SelectedProductParameter.Parameter != null
+            SelectedProductParameter.Parameter != null &&
+            !string.IsNullOrEmpty(SelectedProductParameter.Meaning)
             );
 
             OpenAddEditProductType = new CommandMvvm(() => 
@@ -90,6 +98,19 @@ namespace Разработка_магазина_для_продажи_строй
                     ProductDB.GetDB().Update(SelectedProduct);
                 else
                     ProductDB.GetDB().Insert(SelectedProduct);
+                foreach (var s in SelectedSelectedProductParameters)
+                {
+                    if (s.Id > 0)
+                        ProductParameterDB.GetDB().Update(s);
+                    else
+                        ProductParameterDB.GetDB().Insert(s);
+                }
+
+                for (int i = 0; i < SelectedProductParameters.Count; i++)
+                {
+                    if (!SelectedSelectedProductParameters.Contains(SelectedProductParameters[i])) MessageBox.Show(SelectedProductParameters[i].Parameter.Title);
+                        //ProductParameterDB.GetDB().Remove(SelectedProductParameters[i]);
+                }
                 close();
             }, () =>
             !string.IsNullOrEmpty(SelectedProduct.Title) &&
@@ -106,6 +127,7 @@ namespace Разработка_магазина_для_продажи_строй
 
         private void SelectAll()
         {
+            SelectedProductParameter = new ProductParameter();
             //Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
             ProductTypes = new ObservableCollection<ProductType>(ProductTypeDB.GetDB().SelectAll());
             if (SelectedProduct.ProductType != null)

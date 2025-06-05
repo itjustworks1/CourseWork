@@ -31,19 +31,22 @@ namespace Разработка_магазина_для_продажи_строй
             {
                 ParameterDB.GetDB().Insert(SelectedParameter);
                 SelectAll();
-            }, () => !string.IsNullOrEmpty(SelectedParameter.Title));
+            }, () => SelectedParameter != null &&
+            !string.IsNullOrEmpty(SelectedParameter.Title));
 
             EditParameter = new CommandMvvm(() =>
             {
                 ParameterDB.GetDB().Update(SelectedParameter);
                 SelectAll();
-            }, () => !string.IsNullOrEmpty(SelectedParameter.Title));
+            }, () => SelectedParameter != null &&
+            !string.IsNullOrEmpty(SelectedParameter.Title));
             
             RemoveParameter = new CommandMvvm(() =>
             {
                 //ParameterDB.GetDB().Remove(SelectedParameter);
                 SelectAll();
-            }, () => !string.IsNullOrEmpty(SelectedParameter.Title));
+            }, () => SelectedParameter != null &&
+            !string.IsNullOrEmpty(SelectedParameter.Title));
         }
 
         private void SelectAll()

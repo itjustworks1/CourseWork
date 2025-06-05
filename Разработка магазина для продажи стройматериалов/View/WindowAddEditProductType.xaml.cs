@@ -25,5 +25,10 @@ namespace Разработка_магазина_для_продажи_строй
             InitializeComponent();
             DataContext = new AddEditProductTypeVM();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

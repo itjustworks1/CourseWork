@@ -19,7 +19,7 @@ namespace Разработка_магазина_для_продажи_строй
         private ObservableCollection<Parameter> parameters = new();
         private ObservableCollection<ProductTypeParameter> productTypeParameters = new();
         private ObservableCollection<ProductTypeParameter> selectedProductTypeParametersOnProductType = new();
-        private ProductTypeParameter selectedProductTypeParameter = new();
+        private ProductTypeParameter selectedProductTypeParameter;
 
         public ProductTypeParameter SelectedProductTypeParameter { get => selectedProductTypeParameter; set { selectedProductTypeParameter = value; Signal(); } }
         public ObservableCollection<ProductTypeParameter> ProductTypeParameters { get => productTypeParameters; set { productTypeParameters = value; Signal(); } }
@@ -27,7 +27,7 @@ namespace Разработка_магазина_для_продажи_строй
         public ObservableCollection<Parameter> Parameters { get => parameters; set { parameters = value; Signal(); } }
         public ObservableCollection<ProductType> ProductTypes { get => productTypes; set { productTypes = value; Signal(); } }
         public Parameter SelectedParameter { get => selectedParameter; set { selectedParameter = value; Signal(); } }
-        public ProductType SelectedProductType { get => selectedProductType; set { selectedProductType = value; Signal(); } }
+        public ProductType SelectedProductType { get => selectedProductType; set { selectedProductType = value; if (SelectedProductType != null) SelectedProductTypeParametersOnProductType = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll().Where(s => s.ProductTypeId == SelectedProductType.Id)); Signal(); } }
 
         public CommandMvvm AddProductType { get; set; }
         public CommandMvvm EditProductType { get; set; }
@@ -39,43 +39,62 @@ namespace Разработка_магазина_для_продажи_строй
 
         public AddEditProductTypeVM()
         {
-            SelectedProductType = new ProductType();
             SelectAll();
             AddProductType = new CommandMvvm(() =>
             {
                 ProductTypeDB.GetDB().Insert(SelectedProductType);
                 SelectAll();
-            }, () => !string.IsNullOrEmpty(SelectedProductType.Title));
+            }, () => SelectedProductType != null &&
+            !string.IsNullOrEmpty(SelectedProductType.Title));
 
             EditProductType = new CommandMvvm(() =>
             {
                 ProductTypeDB.GetDB().Update(SelectedProductType);
                 SelectAll();
-            }, () => !string.IsNullOrEmpty(SelectedProductType.Title));
+            }, () => SelectedProductType != null &&
+             !string.IsNullOrEmpty(SelectedProductType.Title));
 
             RemoveProductType = new CommandMvvm(() =>
             {
 
                 SelectAll();
-            }, () => !string.IsNullOrEmpty(SelectedProductType.Title));
+            }, () => SelectedProductType != null &&
+            !string.IsNullOrEmpty(SelectedProductType.Title));
 
             AddParameter = new CommandMvvm(() =>
             {
-
+                ProductTypeParameter productTypeParameter = new ProductTypeParameter() 
+                {
+                    Parameter = SelectedParameter,
+                    ParameterId = SelectedParameter.Id,
+                    ProductType = SelectedProductType,
+                    ProductTypeId = SelectedProductType.Id
+                };
+                ProductTypeParameterDB.GetDB().Insert(productTypeParameter);
                 SelectAll();
-            }, () => SelectedProductType != null);
+            }, () => SelectedParameter != null &&
+            SelectedProductType != null &&
+            !string.IsNullOrEmpty(SelectedProductType.Title));
 
             EditParameter = new CommandMvvm(() =>
             {
-
+                Parameter parameter = SelectedProductTypeParameter.Parameter;
+                SelectedProductTypeParameter.Parameter = SelectedParameter;
+                SelectedProductTypeParameter.ParameterId = SelectedParameter.Id;
+                ProductTypeParameterDB.GetDB().UpdateParameter(SelectedProductTypeParameter, parameter);
                 SelectAll();
-            }, () => true);
+            }, () => SelectedProductTypeParameter != null &&
+            SelectedParameter != null &&
+            SelectedProductType != null &&
+            !string.IsNullOrEmpty(SelectedProductType.Title));
 
             RemoveParameter = new CommandMvvm(() =>
             {
-
+                ProductTypeParameterDB.GetDB().Remove(SelectedProductTypeParameter);
                 SelectAll();
-            }, () => SelectedParameter != null);
+            }, () => SelectedProductTypeParameter != null &&
+            SelectedProductType != null &&
+            !string.IsNullOrEmpty(SelectedProductType.Title));
 
             OpenAddEditParameter = new CommandMvvm(() =>
             {
@@ -87,6 +106,7 @@ namespace Разработка_магазина_для_продажи_строй
 
         private void SelectAll()
         {
+            SelectedProductType = new ProductType();
             ProductTypes = new ObservableCollection<ProductType>(ProductTypeDB.GetDB().SelectAll());
             Parameters = new ObservableCollection<Parameter>(ParameterDB.GetDB().SelectAll());
             ProductTypeParameters = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll());

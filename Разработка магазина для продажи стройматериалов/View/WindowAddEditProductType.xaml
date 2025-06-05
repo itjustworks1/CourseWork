@@ -88,14 +88,14 @@ MaxWidth="{Binding ActualWidth, ElementName=cb2}">
             <Button Content="Удалить" Command="{Binding RemoveParameter}" Margin="10" FontSize="16"/>
         </StackPanel>
         <Button Content="Открыть окно управления параметрами" Command="{Binding OpenAddEditParameter}" Margin="10" Grid.Column="2" Grid.ColumnSpan="2" FontSize="16"/>
-        <ListView ItemsSource="{Binding ProductTypeParameters}" SelectedItem="{Binding SelectedProductTypeParameter}" Margin="0,10" Grid.Row="1" Grid.Column="2" FontSize="16">
+        <ListView ItemsSource="{Binding ProductTypes}" SelectedItem="{Binding SelectedProductType}" Margin="0,10" Grid.Row="1" Grid.Column="2" FontSize="16">
                 <ListView.View>
                     <GridView>
-                    <GridViewColumn Header="Тип товара" DisplayMemberBinding="{Binding ProductType.Title}"/>
+                    <GridViewColumn Header="Тип товара" DisplayMemberBinding="{Binding Title}"/>
                 </GridView>
                 </ListView.View>
             </ListView>
-        <ListView ItemsSource="{Binding SelectedParameters}" SelectedItem="{Binding SelectedParameter}" Margin="0,10,10,10" Grid.Row="1" Grid.Column="3" FontSize="16">
+        <ListView ItemsSource="{Binding SelectedProductTypeParametersOnProductType}" SelectedItem="{Binding SelectedProductTypeParameter}" Margin="0,10,10,10" Grid.Row="1" Grid.Column="3" FontSize="16">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Название параметра" DisplayMemberBinding="{Binding Parameter.Title}"/>
