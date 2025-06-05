@@ -19,9 +19,10 @@ namespace Разработка_магазина_для_продажи_строй
      * Что-то сделать с поиском ?
      * Разобраться с ценами в заказе // я хз, вроде сделал
      * У всех Листов добавить верт скролл
+     *  визуал в 3 мелких окнах
      * В WindowProduct [не меняется TextBlock] + [доделать вывод инфы] + хотелось бы чуть исправить изменения
      * В WindowAddEditProduct [сломался Parameter] + хотелось что бы ComboBox менялся от выбранных параметров;
-           теперь просто не добавляется параметр + почему всё сразу меняется + при удалении параметра накричали
+           теперь просто не добавляется параметр + почему всё сразу меняется + [при удалении параметра накричали]
            // всё из-за сложности совместить ProductParameter с Parameter
      * В WindowAddEditProductType доделать список Parameter + настроить связи
      */
@@ -47,28 +48,28 @@ namespace Разработка_магазина_для_продажи_строй
         public MainVM()
         {
             SelectAll();
-            //!![#]
+
             AddProduct = new CommandMvvm(() =>
             {
                 Product product = new Product();
                 new WindowAddEditProduct(product).ShowDialog();
                 SelectAll();
             }, () => true);
-            //!!#
+
             AddToCart = new CommandMvvm(() =>
             {
-                //корзина = список OrderStructure в нынешнем Order ?!      \
-                // окна под список Order будет !                            } Что Такое Order - это p1-o1;p2-o1;p3-o1; p1-o2;p2-o2
-                // Status у Orger это либо оплачен ? либо завершен ?! !    /
                 SelectAll();
             }, () => true);
-            //!?[.]
+
             OpenCart = new CommandMvvm(() =>
             {
-                new WindowCart().ShowDialog();
+                var windowCart = new WindowCart();
+                //hide();
+                windowCart.ShowDialog();
+                
                 SelectAll();
             }, () => true);
-            //!!#
+
             OpenProduct = new CommandMvvm(() =>
             {
                 new WindowProduct(SelectedProduct).ShowDialog();
@@ -84,6 +85,12 @@ namespace Разработка_магазина_для_продажи_строй
         private void SearchProduct(string search)
         {
             Products = new ObservableCollection<Product>(ProductDB.GetDB().SearchProduct(search));
+        }
+        Action hide;
+
+        internal void SetClose(Action hide)
+        {
+            this.hide = hide;
         }
     }
 }

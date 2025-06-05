@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Разработка_магазина_для_продажи_стройматериалов.Model;
 using Разработка_магазина_для_продажи_стройматериалов.ViewModel;
 
 namespace Разработка_магазина_для_продажи_стройматериалов.View
@@ -20,7 +21,10 @@ namespace Разработка_магазина_для_продажи_строй
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainVM();
+            var vm = new MainVM();
+            DataContext = vm;
+
+            vm.SetClose(Hide);
         }
     }
 }

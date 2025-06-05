@@ -16,7 +16,7 @@ namespace Разработка_магазина_для_продажи_строй
     {
         private ObservableCollection<ProductType> productTypes = new();
         private Product selectedProduct;
-        private ObservableCollection<Product> products = new();
+        //private ObservableCollection<Product> products = new();
         private ObservableCollection<ProductParameter> productParameters = new();
         private ProductParameter selectedProductParameter;
         private ObservableCollection<ProductParameter> selectedProductParameters = new();

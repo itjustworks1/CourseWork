@@ -17,8 +17,8 @@ namespace Разработка_магазина_для_продажи_строй
             MySqlConnectionStringBuilder sb = new MySqlConnectionStringBuilder();
             sb.UserID = "student";
             sb.Password = "student";
-            sb.Server = "95.154.107.102";
-            //sb.Server = "192.168.200.13";
+            //sb.Server = "95.154.107.102";
+            sb.Server = "192.168.200.13";
             sb.Database = "1125_2025_KrylovKursovai";
             sb.CharacterSet = "utf8mb4";
             _connection = new MySqlConnection(sb.ToString());
