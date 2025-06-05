@@ -24,7 +24,10 @@ namespace Разработка_магазина_для_продажи_строй
         public WindowCart()
         {
             InitializeComponent();
-            DataContext = new CartVM();
+            var vm = new CartVM(this);
+            DataContext = vm;
+
+            vm.SetHide(Hide);
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Разработка_магазина_для_продажи_строй
         public CommandMvvm RemoveParameter { get; set; }
         public CommandMvvm OpenAddEditParameter { get; set; }
 
-        public AddEditProductTypeVM()
+        public AddEditProductTypeVM(WindowAddEditProductType thisWindow)
         {
             SelectAll();
             AddProductType = new CommandMvvm(() =>
@@ -98,7 +98,9 @@ namespace Разработка_магазина_для_продажи_строй
 
             OpenAddEditParameter = new CommandMvvm(() =>
             {
+                hide();
                 new WindowAddEditParameter().ShowDialog();
+                thisWindow.ShowDialog();
                 SelectAll();
             }, () => true);
 
@@ -111,6 +113,12 @@ namespace Разработка_магазина_для_продажи_строй
             Parameters = new ObservableCollection<Parameter>(ParameterDB.GetDB().SelectAll());
             ProductTypeParameters = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll());
             //selectedProductTypeParametersOnProductType = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll());
+        }
+        Action hide;
+
+        internal void SetHide(Action hide)
+        {
+            this.hide = hide;
         }
     }
 }

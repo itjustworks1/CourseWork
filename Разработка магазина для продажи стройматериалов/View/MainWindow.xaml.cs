@@ -21,10 +21,10 @@ namespace Разработка_магазина_для_продажи_строй
         public MainWindow()
         {
             InitializeComponent();
-            var vm = new MainVM();
+            var vm = new MainVM(this);
             DataContext = vm;
 
-            vm.SetClose(Hide);
+            vm.SetHide(Hide);
         }
     }
 }

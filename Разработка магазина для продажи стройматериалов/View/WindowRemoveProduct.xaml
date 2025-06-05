@@ -16,7 +16,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock HorizontalAlignment="Center" Text="Удалить товар" Grid.ColumnSpan="2" FontSize="36"/>
-        <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="100" Grid.Row="2" FontSize="20"/>
+        <TextBox HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="100" TextAlignment="Center" Grid.Row="2" FontSize="20"/>
         <Button HorizontalAlignment="Center" VerticalAlignment="Center" Content="Удалить" Command="{Binding Remove}" Grid.Row="2" Grid.Column="2" FontSize="20"/>
     </Grid>
 </Window>

@@ -23,7 +23,11 @@ namespace Разработка_магазина_для_продажи_строй
         public WindowListOrders()
         {
             InitializeComponent();
-            DataContext = new ListOrdersVM();
+            var vm = new ListOrdersVM(this);
+            DataContext = vm;
+
+            vm.SetHide(Hide);
+            vm.SetClose(Close);
         }
     }
 }

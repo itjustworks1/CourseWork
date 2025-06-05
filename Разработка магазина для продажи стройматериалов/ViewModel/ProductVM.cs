@@ -28,7 +28,7 @@ namespace Разработка_магазина_для_продажи_строй
         public CommandMvvm RemoveProduct { get; set; }
         public CommandMvvm OpenCart { get; set; }
 
-        public ProductVM(Product product)
+        public ProductVM(WindowProduct thisWindow, Product product)
         {
             SelectedProduct = product;
             SelectAll();
@@ -40,8 +40,21 @@ namespace Разработка_магазина_для_продажи_строй
 
             EditProduct = new CommandMvvm(() =>
             {
-                new WindowAddEditProduct(SelectedProduct).ShowDialog();
+                //Product product1 = new Product() 
+                //{ 
+                //    Id = SelectedProduct.Id,
+                //    ProductType = SelectedProduct.ProductType,
+                //    ProductTypeId = SelectedProduct.ProductTypeId,
+                //    Quantity = SelectedProduct.Quantity,
+                //    Title = SelectedProduct.Title,
+                //    Value = SelectedProduct.Value 
+                //};
+                bool isEdit = false;
+                hide();
+                new WindowAddEditProduct(SelectedProduct, ref isEdit).ShowDialog();
+                //if (!isEdit) SelectedProduct = product1;
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => true);
             //
             RemoveProduct = new CommandMvvm(() =>
@@ -52,8 +65,10 @@ namespace Разработка_магазина_для_продажи_строй
             
             OpenCart = new CommandMvvm(() =>
             {
+                hide();
                 new WindowCart().ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => true);
         }
 
@@ -72,6 +87,12 @@ namespace Разработка_магазина_для_продажи_строй
         internal void SetClose(Action close)
         {
             this.close = close;
+        }
+        Action hide;
+
+        internal void SetHide(Action hide)
+        {
+            this.hide = hide;
         }
     }
 }

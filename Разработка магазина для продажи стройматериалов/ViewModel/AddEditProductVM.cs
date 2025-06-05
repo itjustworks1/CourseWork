@@ -16,7 +16,7 @@ namespace Разработка_магазина_для_продажи_строй
     {
         private ObservableCollection<ProductType> productTypes = new();
         private Product selectedProduct;
-        //private ObservableCollection<Product> products = new();
+        private ObservableCollection<Product> products = new();
         private ObservableCollection<ProductParameter> productParameters = new();
         private ProductParameter selectedProductParameter;
         private ObservableCollection<ProductParameter> selectedProductParameters = new();
@@ -29,7 +29,7 @@ namespace Разработка_магазина_для_продажи_строй
         public ProductParameter SelectedProductParameter { get => selectedProductParameter; set { selectedProductParameter = value; Signal(); } }
         public ObservableCollection<ProductParameter> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
         public ObservableCollection<ProductType> ProductTypes { get => productTypes; set { productTypes = value; Signal(); } }
-        //public ObservableCollection<Product> Products { get => products; set { products = value; Signal(); }}
+        public ObservableCollection<Product> Products { get => products; set { products = value; Signal(); } }
         public Product SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
 
         public CommandMvvm Save { get; set; }
@@ -39,7 +39,7 @@ namespace Разработка_магазина_для_продажи_строй
         public CommandMvvm RemoveParameter { get; set; }
         public CommandMvvm OpenAddEditProductType { get; set; }
 
-        public AddEditProductVM(Product product)
+        public AddEditProductVM(WindowAddEditProduct thisWindow, Product product, ref bool isEdit)
         {
             SelectedProduct = product;
             SelectAll();
@@ -78,17 +78,19 @@ namespace Разработка_магазина_для_продажи_строй
                         SelectedSelectedProductParameters.Remove(SelectedSelectedProductParameters[i]);
                 // при синхронизации удаляет оба
                 SelectAll();
-                // при обновлении они рассинхронизируются
+                // при обновлении они десинхронизируются
             }, () =>
             SelectedProductParameter != null &&
             SelectedProductParameter.Parameter != null &&
             !string.IsNullOrEmpty(SelectedProductParameter.Meaning)
             );
 
-            OpenAddEditProductType = new CommandMvvm(() => 
+            OpenAddEditProductType = new CommandMvvm(() =>
             {
+                hide();
                 new WindowAddEditProductType().ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => true);
 
             Save = new CommandMvvm(() =>
@@ -97,7 +99,17 @@ namespace Разработка_магазина_для_продажи_строй
                 if (SelectedProduct.Id > 0)
                     ProductDB.GetDB().Update(SelectedProduct);
                 else
+                { 
                     ProductDB.GetDB().Insert(SelectedProduct);
+                    Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
+                    product = Products.LastOrDefault();
+                    SelectedProduct = product;
+                    for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
+                    {
+                        SelectedSelectedProductParameters[i].Product = SelectedProduct;
+                        SelectedSelectedProductParameters[i].ProductId = SelectedProduct.Id;
+                    }
+                }
                 foreach (var s in SelectedSelectedProductParameters)
                 {
                     if (s.Id > 0)
@@ -106,11 +118,15 @@ namespace Разработка_магазина_для_продажи_строй
                         ProductParameterDB.GetDB().Insert(s);
                 }
 
+                List<int> c = new List<int>();
+                for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
+                    c.Add(SelectedSelectedProductParameters[i].Id);
+
                 for (int i = 0; i < SelectedProductParameters.Count; i++)
-                {
-                    if (!SelectedSelectedProductParameters.Contains(SelectedProductParameters[i])) MessageBox.Show(SelectedProductParameters[i].Parameter.Title);
-                        //ProductParameterDB.GetDB().Remove(SelectedProductParameters[i]);
-                }
+                    if (!c.Contains(SelectedProductParameters[i].Id)) //MessageBox.Show(SelectedProductParameters[i].Parameter.Title);
+                        ProductParameterDB.GetDB().Remove(SelectedProductParameters[i]);
+                IsEdit = true;
+                //thisWindow
                 close();
             }, () =>
             !string.IsNullOrEmpty(SelectedProduct.Title) &&
@@ -127,8 +143,8 @@ namespace Разработка_магазина_для_продажи_строй
 
         private void SelectAll()
         {
-            SelectedProductParameter = new ProductParameter();
-            //Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
+            if (SelectedProductParameter == null) SelectedProductParameter = new ProductParameter();
+            Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
             ProductTypes = new ObservableCollection<ProductType>(ProductTypeDB.GetDB().SelectAll());
             if (SelectedProduct.ProductType != null)
                 SelectedProduct.ProductType = ProductTypes.FirstOrDefault(s => s.Id == SelectedProduct.ProductTypeId);
@@ -138,10 +154,16 @@ namespace Разработка_магазина_для_продажи_строй
 
         }
         Action close;
-
+        public bool IsEdit { get; set; } = false;
         internal void SetClose(Action close)
         {
             this.close = close;
+        }
+        Action hide;
+
+        internal void SetHide(Action hide)
+        {
+            this.hide = hide;
         }
     }
 }

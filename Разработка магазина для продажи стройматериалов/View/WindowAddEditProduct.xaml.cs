@@ -21,12 +21,13 @@ namespace Разработка_магазина_для_продажи_строй
     /// </summary>
     public partial class WindowAddEditProduct : Window
     {
-        public WindowAddEditProduct(Product product)
+        public WindowAddEditProduct(Product product, ref bool isEdit)
         {
             InitializeComponent();
-            var vm = new AddEditProductVM(product);
+            var vm = new AddEditProductVM(this, product, ref isEdit);
             DataContext = vm;
 
+            vm.SetHide(Hide);
             vm.SetClose(Close);
             //((AddAuthorMvvm)this.DataContext).SetAuthor(author);
         }

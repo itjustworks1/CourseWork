@@ -23,12 +23,10 @@ namespace Разработка_магазина_для_продажи_строй
         public WindowAddEditProductType()
         {
             InitializeComponent();
-            DataContext = new AddEditProductTypeVM();
-        }
+            var vm = new AddEditProductTypeVM(this);
+            DataContext = vm;
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
+            vm.SetHide(Hide);
         }
     }
 }

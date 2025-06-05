@@ -19,7 +19,6 @@ namespace Разработка_магазина_для_продажи_строй
      * Что-то сделать с поиском ?
      * Разобраться с ценами в заказе // я хз, вроде сделал
      * У всех Листов добавить верт скролл
-     *  визуал в 3 мелких окнах
      * В WindowProduct [не меняется TextBlock] + [доделать вывод инфы] + хотелось бы чуть исправить изменения
      * В WindowAddEditProduct [сломался Parameter] + хотелось что бы ComboBox менялся от выбранных параметров;
            теперь просто не добавляется параметр + почему всё сразу меняется + [при удалении параметра накричали]
@@ -27,6 +26,7 @@ namespace Разработка_магазина_для_продажи_строй
      * В WindowAddEditProductType доделать список Parameter + настроить связи
      */
     /* Готово
+     *  [визуал в 3 мелких окнах]
      * [В WindowListOrders сделать отдельно для карзины(false)].
      * [Исправить кнопку добавление/удаления товара в/из корзину/ы, редактирование Order].
      */
@@ -45,15 +45,18 @@ namespace Разработка_магазина_для_продажи_строй
         public CommandMvvm OpenCart { get; set; }
         public CommandMvvm OpenProduct { get; set; }
 
-        public MainVM()
+        public MainVM(MainWindow thisWindow)
         {
             SelectAll();
 
             AddProduct = new CommandMvvm(() =>
             {
                 Product product = new Product();
-                new WindowAddEditProduct(product).ShowDialog();
+                bool isEdit = false;
+                hide();
+                new WindowAddEditProduct(product, ref isEdit).ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => true);
 
             AddToCart = new CommandMvvm(() =>
@@ -63,17 +66,18 @@ namespace Разработка_магазина_для_продажи_строй
 
             OpenCart = new CommandMvvm(() =>
             {
-                var windowCart = new WindowCart();
-                //hide();
-                windowCart.ShowDialog();
-                
+                hide();
+                new WindowCart().ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => true);
 
             OpenProduct = new CommandMvvm(() =>
             {
+                hide();
                 new WindowProduct(SelectedProduct).ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => SelectedProduct != null);
 
         }
@@ -88,7 +92,7 @@ namespace Разработка_магазина_для_продажи_строй
         }
         Action hide;
 
-        internal void SetClose(Action hide)
+        internal void SetHide(Action hide)
         {
             this.hide = hide;
         }

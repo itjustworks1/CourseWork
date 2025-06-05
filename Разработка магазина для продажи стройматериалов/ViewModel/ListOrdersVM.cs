@@ -27,18 +27,20 @@ namespace Разработка_магазина_для_продажи_строй
         public CommandMvvm EditOrder { get; set; }
         public CommandMvvm OpenOrder { get; set; }
 
-        public ListOrdersVM()
+        public ListOrdersVM(WindowListOrders thisWindow)
         {
             SelectAll();
             EditOrder = new CommandMvvm(() =>
             {
-                SelectAll();
+                close();
             }, () => true);
 
             OpenOrder = new CommandMvvm(() =>
             {
+                hide();
                 new WindowOrder(SelectedOrder).ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => SelectedOrder != null);
 
         }
@@ -47,6 +49,17 @@ namespace Разработка_магазина_для_продажи_строй
         {
             Orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll());
             OrdersWithoutCart = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll().Where(s => s.Status == true));
+        }
+        Action hide;
+
+        internal void SetHide(Action hide)
+        {
+            this.hide = hide;
+        }
+        Action close;
+        internal void SetClose(Action close)
+        {
+            this.close = close;
         }
     }
 }

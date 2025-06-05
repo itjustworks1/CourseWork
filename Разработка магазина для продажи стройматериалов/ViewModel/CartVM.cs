@@ -30,8 +30,9 @@ namespace Разработка_магазина_для_продажи_строй
         public CommandMvvm RemoveFromCart { get; set; }
         public CommandMvvm OpenOrder { get; set; }
         public CommandMvvm OpenProduct { get; set; }
+        public CommandMvvm Close { get; set; }
 
-        public CartVM()
+        public CartVM(WindowCart thisWindow)
         {
             if (Orders.FirstOrDefault(s => s.Status == false) == null)
             {
@@ -55,14 +56,18 @@ namespace Разработка_магазина_для_продажи_строй
 
             OpenOrder = new CommandMvvm(() =>
             {
+                hide();
                 new WindowListOrders().ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => true);
 
             OpenProduct = new CommandMvvm(() =>
             {
+                hide();
                 new WindowProduct(SelectedOrderStructure.Product).ShowDialog();
                 SelectAll();
+                thisWindow.ShowDialog();
             }, () => SelectedOrderStructure != null);
         }
 
@@ -76,11 +81,11 @@ namespace Разработка_магазина_для_продажи_строй
         {
             OrderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SearchOrderStructure(search).Where(s => s.Order.Status == false));
         }
-        Action close;
+        Action hide;
 
-        internal void SetClose(Action close)
+        internal void SetHide(Action hide)
         {
-            this.close = close;
+            this.hide = hide;
         }
 
         public void NewOrder()
