@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов.View"
         mc:Ignorable="d"
-        Title="Управление параметрами" Height="350" Width="400">
+        Title="Управление параметрами" Height="350" Width="400" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -17,7 +17,7 @@
             </Grid>
             <Button Content="Добавить" Command="{Binding AddParameter}" Margin="10" FontSize="16"/>
             <Button Content="Редактировать" Command="{Binding EditParameter}" Margin="10" FontSize="16"/>
-            <Button Content="Удалить" Command="{Binding RemoveParameter}" Margin="10" FontSize="16"/>
+            <!--<Button Content="Удалить" Command="{Binding RemoveParameter}" Margin="10" FontSize="16"/>-->
         </StackPanel>
         <ListView ItemsSource="{Binding Parameters}" SelectedItem="{Binding SelectedParameter}" Grid.Column="1" FontSize="16">
             <ListView.View>

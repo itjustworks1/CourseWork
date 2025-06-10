@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Магазин стройматериалов" Height="450" Width="800" x:Name="qwe">
+        Title="Магазин стройматериалов" Height="450" Width="800" x:Name="qwe" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -16,8 +16,8 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid Margin="10">
-            <!--<TextBox Name="tb1" Height="24" MinWidth="400" MaxWidth="500" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="20"/>-->
+        <!--<Grid Margin="10">
+            <TextBox Name="tb1" Height="24" MinWidth="400" MaxWidth="500" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="20"/>
             <TextBlock 
                    Text="Поиск"
                    IsHitTestVisible="False"
@@ -41,7 +41,7 @@
                     </Style>
                 </TextBlock.Style>
             </TextBlock>
-        </Grid>
+        </Grid>-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Grid.ColumnSpan="2">
             <Button Width="100" Command="{Binding AddProduct}" FontSize="16">
                 <TextBlock> Добавить <LineBreak/> товар </TextBlock>

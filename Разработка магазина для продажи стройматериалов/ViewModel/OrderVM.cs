@@ -18,16 +18,19 @@ namespace Разработка_магазина_для_продажи_строй
         private ObservableCollection<Order> orders = new();
         private ObservableCollection<OrderStructure> orderStructures = new();
         private decimal value;
+        private OrderStructure selectedOrderStructure;
 
+        public OrderStructure SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; Signal(); } }
         public decimal Value { get => value; set { this.value = value; Signal(); } }
         public ObservableCollection<OrderStructure> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
         public ObservableCollection<Order> Orders { get => orders; set { orders = value; Signal(); } }
         public Order SelectedOrder { get => selectedOrder; set { selectedOrder = value; Signal(); } }
 
         public CommandMvvm RemoveOrder { get; set; }
+        public CommandMvvm OpenProduct { get; set; }
         //public CommandMvvm EditOrder { get; set; }
 
-        public OrderVM(Order order)
+        public OrderVM(WindowOrder thisWindow, Order order)
         {
             SelectedOrder = order;
             SelectAll();
@@ -45,6 +48,14 @@ namespace Разработка_магазина_для_продажи_строй
                 close();
             }, () => SelectedOrder != null);
 
+            OpenProduct = new CommandMvvm(() =>
+            {
+                hide();
+                new WindowProduct(SelectedOrderStructure.Product).ShowDialog();
+                SelectAll();
+                thisWindow.ShowDialog();
+            }, () => SelectedOrderStructure != null);
+
             //EditOrder = new CommandMvvm(() =>
             //{
             //    SelectAll();
@@ -55,13 +66,19 @@ namespace Разработка_магазина_для_продажи_строй
         private void SelectAll()
         {
             Orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll());
-            OrderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SelectAll().Where(s => s.OrderId == SelectedOrder.Id));
+            OrderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SelectAll().Where(s => s.OrderId == SelectedOrder.Id).OrderByDescending(t => t.Product.Title));
         }
         Action close;
 
         internal void SetClose(Action close)
         {
             this.close = close;
+        }
+        Action hide;
+
+        internal void SetHide(Action hide)
+        {
+            this.hide = hide;
         }
     }
 }

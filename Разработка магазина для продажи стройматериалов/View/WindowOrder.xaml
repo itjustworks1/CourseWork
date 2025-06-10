@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов.View"
         mc:Ignorable="d"
-        Title="О заказе" Height="450" Width="800">
+        Title="О заказе" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <ListBox ItemsSource="{Binding OrderStructures}" Margin="10">
+        <ListBox ItemsSource="{Binding OrderStructures}" SelectedItem="{Binding SelectedOrderStructure}" Margin="10">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -27,13 +27,28 @@
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Product.Title}" VerticalAlignment="Center" FontSize="20"/>
+                            <TextBlock Text="{Binding Product.Title}" VerticalAlignment="Center" FontSize="20">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                </TextBlock.InputBindings>
+                            </TextBlock>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
-                                <TextBlock Text="{Binding Value}" FontSize="20"/>
+                                <TextBlock Text="{Binding Value}" FontSize="20">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
                                 <TextBlock Text="р" FontSize="20"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="2">
-                                <TextBlock Text="{Binding Quantity}" FontSize="16"/>
+                                <TextBlock Text="{Binding Quantity}" FontSize="16">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick"
+                                          Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
                                 <TextBlock Text="шт"  FontSize="16"/>
                             </StackPanel>
                         </Grid>

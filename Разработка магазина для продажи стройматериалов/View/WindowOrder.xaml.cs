@@ -25,9 +25,10 @@ namespace Разработка_магазина_для_продажи_строй
         public WindowOrder(Order order)
         {
             InitializeComponent();
-            var vm = new OrderVM(order);
+            var vm = new OrderVM(this, order);
             DataContext = vm;
 
+            vm.SetHide(Hide);
             vm.SetClose(Close);
         }
     }

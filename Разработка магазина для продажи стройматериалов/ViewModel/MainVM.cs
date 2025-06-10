@@ -84,7 +84,7 @@ namespace Разработка_магазина_для_продажи_строй
 
         private void SelectAll()
         {
-            Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
+            Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll().OrderByDescending(t => t.Title));
         }
         private void SearchProduct(string search)
         {

@@ -47,8 +47,8 @@ namespace Разработка_магазина_для_продажи_строй
 
         private void SelectAll()
         {
-            Orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll());
-            OrdersWithoutCart = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll().Where(s => s.Status == true));
+            Orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll().OrderByDescending(t => t.Date));
+            OrdersWithoutCart = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll().Where(s => s.Status == true).OrderByDescending(t => t.Date).Reverse());
         }
         Action hide;
 

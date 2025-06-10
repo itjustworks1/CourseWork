@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов.View"
         mc:Ignorable="d"
-        Title="Управление типами продуктов" Height="400" Width="800">
+        Title="Управление типами продуктов" Height="400" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -47,7 +47,7 @@
             </Grid>
             <Button Content="Добавить" Command="{Binding AddProductType}" Margin="10" FontSize="16"/>
             <Button Content="Редактировать" Command="{Binding EditProductType}" Margin="10" FontSize="16"/>
-            <Button Content="Удалить" Command="{Binding RemoveProductType}" Margin="10" FontSize="16"/>
+            <!--<Button Content="Удалить" Command="{Binding RemoveProductType}" Margin="10" FontSize="16"/>-->
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="1">

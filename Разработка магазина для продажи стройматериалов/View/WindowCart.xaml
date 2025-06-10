@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов.View"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Корзина" Height="450" Width="800">
+        Title="Корзина" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>

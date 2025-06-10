@@ -127,6 +127,7 @@ namespace Разработка_магазина_для_продажи_строй
                         ProductParameterDB.GetDB().Remove(SelectedProductParameters[i]);
                 IsEdit = true;
                 //thisWindow
+                product = SelectedProduct;
                 close();
             }, () =>
             !string.IsNullOrEmpty(SelectedProduct.Title) &&

@@ -73,7 +73,7 @@ namespace Разработка_магазина_для_продажи_строй
 
         private void SelectAll()
         {
-            OrderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SelectAll().Where(s => s.Order.Status == false));
+            OrderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SelectAll().Where(s => s.Order.Status == false).OrderByDescending(t => t.Product.Title));
             Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
             Orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll());
         }

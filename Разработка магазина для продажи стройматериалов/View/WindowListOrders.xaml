@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Разработка_магазина_для_продажи_стройматериалов.View"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="Список заказов" Height="450" Width="400">
+        Title="Список заказов" Height="450" Width="400" WindowStartupLocation="CenterScreen">
     <Grid>
         <ListBox ItemsSource="{Binding OrdersWithoutCart}" SelectedItem="{Binding SelectedOrder}" Margin="10">
             <ListBox.ItemTemplate>
