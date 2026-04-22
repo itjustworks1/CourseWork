@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace Magaz_Stroitelya
+namespace Разработка_магазина_для_продажи_стройматериалов
 {
     /// <summary>
     /// Interaction logic for App.xaml

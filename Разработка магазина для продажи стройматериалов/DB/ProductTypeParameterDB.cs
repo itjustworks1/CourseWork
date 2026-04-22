@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using Magaz_Stroitelya.Model;
+using Разработка_магазина_для_продажи_стройматериалов.Model;
 
-namespace Magaz_Stroitelya.DB
+namespace Разработка_магазина_для_продажи_стройматериалов.DB
 {
     class ProductTypeParameterDB
     {

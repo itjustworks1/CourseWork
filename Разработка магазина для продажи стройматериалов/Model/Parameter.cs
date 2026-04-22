@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Magaz_Stroitelya.Model
+namespace Разработка_магазина_для_продажи_стройматериалов.Model
 {
     public class Parameter
     {

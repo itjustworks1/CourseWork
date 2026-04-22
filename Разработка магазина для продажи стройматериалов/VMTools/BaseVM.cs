@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Magaz_Stroitelya.VMTools
+namespace Разработка_магазина_для_продажи_стройматериалов.VMTools
 {
     public class BaseVM : INotifyPropertyChanged
     {
