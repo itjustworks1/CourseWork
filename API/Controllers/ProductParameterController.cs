@@ -1,6 +1,6 @@
 ﻿using API.DTO.Raquests;
 using API.DTO.Requests;
-using Magaz_Stroitelya.NewDB;
+using API.NewDB;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

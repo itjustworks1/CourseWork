@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Magaz_Stroitelya.NewDB;
+namespace API.NewDB;
 
 public partial class Product
 {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Magaz_Stroitelya.NewDB;
+using API.NewDB;
 
 namespace API.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using API.DTO.Auth;
 using System.Security.Claims;
-using Magaz_Stroitelya.NewDB;
+using API.NewDB;
 
 namespace API.Servise.Auth
 {

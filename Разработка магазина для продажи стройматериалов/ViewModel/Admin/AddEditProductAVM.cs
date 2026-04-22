@@ -100,38 +100,53 @@ namespace Magaz_Stroitelya.ViewModel.Admin
                 thisWindow.ShowDialog();
             }, () => true);
 
-            Save = new CommandMvvm(() =>
+            Save = new CommandMvvm(async () =>
             {
                 SelectedProduct.ProductTypeId = SelectedProduct.ProductType.Id;
-                //if (SelectedProduct.Id > 0)
-                    //ProductDB.GetDB().Update(SelectedProduct);
-                //else
-                //{ 
-                    //ProductDB.GetDB().Insert(SelectedProduct);
-                    //Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
-                //    product = Products.LastOrDefault();
-                //    SelectedProduct = product;
-                //    for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
-                //    {
-                //        SelectedSelectedProductParameters[i].Product = SelectedProduct;
-                //        SelectedSelectedProductParameters[i].ProductId = SelectedProduct.Id;
-                //    }
-                //}
-                //foreach (var s in SelectedSelectedProductParameters)
-                //{
-                //    if (s.Id > 0)
-                //        ProductParameterDB.GetDB().Update(s);
-                //    else
-                //        ProductParameterDB.GetDB().Insert(s);
-                //}
+                if (SelectedProduct.Id > 0)
+                {
+                    var error = await apiClient.PatchProduct(SelectedProduct.Id, new ProductRequest
+                    {
+                        ProductTypeId = SelectedProduct.ProductType.Id,
+                        Quantity = SelectedProduct.Quantity,
+                        Title = SelectedProduct.Title,
+                        Value = SelectedProduct.Value
+                    });
+                }
+                else
+                {
+                    var error = await apiClient.PostProduct(new ProductRequest
+                    {
+                        ProductTypeId = SelectedProduct.ProductType.Id,
+                        Quantity = SelectedProduct.Quantity,
+                        Title = SelectedProduct.Title,
+                        Value = SelectedProduct.Value
+                    });
+                    (var list, error) = await apiClient.GetListProduct();
+                    Products = [.. list];
+                    product = Products.LastOrDefault();
+                    SelectedProduct = product;
+                    for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
+                    {
+                        SelectedSelectedProductParameters[i].Product = SelectedProduct;
+                        SelectedSelectedProductParameters[i].ProductId = SelectedProduct.Id;
+                    }
+                }
+                foreach (var s in SelectedSelectedProductParameters)
+                {
+                    if (s.Id > 0)
+                        await apiClient.PatchProductParameter(s.Id, s);
+                    else
+                        await apiClient.PostProductParameter(s);
+                }
 
                 List<int> c = new List<int>();
                 for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
                     c.Add(SelectedSelectedProductParameters[i].Id);
 
-                //for (int i = 0; i < SelectedProductParameters.Count; i++)
-                //    if (!c.Contains(SelectedProductParameters[i].Id)) //MessageBox.Show(SelectedProductParameters[i].Parameter.Title);
-                //        ProductParameterDB.GetDB().Remove(SelectedProductParameters[i]);
+                for (int i = 0; i < SelectedProductParameters.Count; i++)
+                    if (!c.Contains(SelectedProductParameters[i].Id)) //MessageBox.Show(SelectedProductParameters[i].Parameter.Title);
+                        await apiClient.DeleteProductParameter(SelectedProductParameters[i].Id);
                 IsEdit = true;
                 //thisWindow
                 product = SelectedProduct;
@@ -164,89 +179,47 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         public async Task SelectProductsAsync()
         {
             var (list, error) = await apiClient.GetListProduct();
-            try
+            var listProduct = new ObservableCollection<ProductResponse>(list);
+            for (int i = 0; i < list.Count; i++)
             {
-                var listProduct = new ObservableCollection<ProductResponse>(list);
-                for (int i = 0; i < list.Count; i++)
+                (var productType, error) = await apiClient.GetParameter(listProduct[i].ProductTypeId);
+                var type = new ProductTypeResponse
                 {
-                    (var productType, error) = await apiClient.GetParameter(listProduct[i].ProductTypeId);
-                    try
-                    {
-                        var type = new ProductTypeResponse
-                        {
-                            Id = listProduct[i].Id,
-                            Title = productType.Title
-                        };
-                        listProduct[i].ProductType = type;
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show(error);
-                    }
-                }
-                Products = listProduct;
+                    Id = listProduct[i].Id,
+                    Title = productType.Title
+                };
+                listProduct[i].ProductType = type;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(error);
-            }
+            Products = listProduct;
         }
         public async Task SelectProductTypesAsync()
         {
             var (list, error) = await apiClient.GetListProductType();
-            try
-            {
-                var listProduct = new ObservableCollection<ProductTypeResponse>(list);
-                ProductTypes = listProduct;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(error);
-            }
+            var listProduct = new ObservableCollection<ProductTypeResponse>(list);
+            ProductTypes = listProduct;
         }
         public async Task SelectProductParametersAsync()
         {
             (var listProductParameter, var error) = await apiClient.GetListProductParameter();
-            try
+            var list = listProductParameter.Where(s => s.ProductId == SelectedProduct.Id).ToArray();
+            for (int i = 0; i < list.Length; i++)
             {
-                var list = listProductParameter.Where(s => s.ProductId == SelectedProduct.Id).ToArray();
-                for (int i = 0; i < list.Length; i++)
+                (var parameter, error) = await apiClient.GetParameter(list[i].ParameterId);
+                var param = new ParameterResponse
                 {
-                    (var parameter, error) = await apiClient.GetParameter(list[i].ParameterId);
-                    try
-                    {
-                        var param = new ParameterResponse
-                        {
-                            Id = list[i].Id,
-                            Title = parameter.Title
-                        };
-                        list[i].Parameter = param;
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show(error);
-                    }
-                    list[i].Product = SelectedProduct;
-                }
-                ProductParameters = [.. list];
+                    Id = list[i].Id,
+                    Title = parameter.Title
+                };
+                list[i].Parameter = param;
+                list[i].Product = SelectedProduct;
             }
-            catch (Exception)
-            {
-                MessageBox.Show(error);
-            }
+            ProductParameters = [.. list];
         }
         public async Task SelectParametersAsync()
         {
             var (list, error) = await apiClient.GetListParameter();
-            try
-            {
-                var listProduct = new ObservableCollection<ParameterResponse>(list);
-                Parameters = listProduct;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(error);
-            }
+            var listProduct = new ObservableCollection<ParameterResponse>(list);
+            Parameters = listProduct;
         }
         Action close;
         public bool IsEdit { get; set; } = false;

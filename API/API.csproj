@@ -41,4 +41,8 @@
     <Folder Include="DTO\Order\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Разработка магазина для продажи стройматериалов\MVVM.csproj" />
+  </ItemGroup>
+
 </Project>

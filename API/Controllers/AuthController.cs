@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Magaz_Stroitelya.NewDB;
+using API.NewDB;
 using Microsoft.IdentityModel.Tokens;
 using API.DTO.Auth;
 using API.Servise.Password;

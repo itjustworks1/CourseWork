@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Magaz_Stroitelya.NewDB;
+using API.NewDB;
 
 namespace API.Controllers
 {
@@ -20,6 +20,13 @@ namespace API.Controllers
         public async Task<ActionResult<List<Product>>> GetList()
         {
             var list = await db.Products.ToListAsync();
+            //var list = await db.Products.Include(s => s.ProductType).ThenInclude(s => new ProductType
+            //{
+            //    Id = s.Id,
+            //    Parameters = s.Parameters,
+            //    Products = s.Products,
+            //    Title = s.Title
+            //}).ToListAsync();
             return Ok(list);
         }
 

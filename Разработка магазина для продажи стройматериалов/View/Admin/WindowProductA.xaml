@@ -17,9 +17,9 @@
         </Grid.ColumnDefinitions>
         <TextBlock Text="{Binding SelectedProduct.Title}" HorizontalAlignment="Center" Margin="10,0" FontSize="24"/>
         <StackPanel HorizontalAlignment="Right"  Grid.RowSpan="2" Grid.Column="1">
-            <Button Width="100" Command="{Binding AddToCart}" Margin="10" FontSize="16">
+            <!--<Button Width="100" Command="{Binding AddToCart}" Margin="10" FontSize="16">
                 <TextBlock> Добавить <LineBreak/> в корзину</TextBlock>
-            </Button>
+            </Button>-->
             <Button Width="100" Content="Изменить" Command="{Binding EditProduct}" Margin="10" FontSize="16" Height="46.56"/>
             <Button Width="100" Content="Удалить" Command="{Binding RemoveProduct}" Margin="10" FontSize="16" Height="46.56"/>
         </StackPanel>

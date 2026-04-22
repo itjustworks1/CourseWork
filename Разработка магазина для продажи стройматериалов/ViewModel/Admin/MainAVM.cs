@@ -71,32 +71,18 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         public async Task SelectProductsAsync()
         {
             var (list, error) = await apiClient.GetListProduct();
-            try
+            var listProduct = new ObservableCollection<ProductResponse>(list);
+            for (int i = 0; i < list.Count; i++)
             {
-                var listProduct = new ObservableCollection<ProductResponse>(list);
-                for (int i = 0; i < list.Count; i++)
+                (var productType, error) = await apiClient.GetParameter(listProduct[i].ProductTypeId);
+                var type = new ProductTypeResponse
                 {
-                    (var productType, error) = await apiClient.GetParameter(listProduct[i].ProductTypeId);
-                    try
-                    {
-                        var type = new ProductTypeResponse
-                        {
-                            Id = listProduct[i].Id,
-                            Title = productType.Title
-                        };
-                        listProduct[i].ProductType = type;
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show(error);
-                    }
-                }
-                Products = listProduct;
+                    Id = listProduct[i].Id,
+                    Title = productType.Title
+                };
+                listProduct[i].ProductType = type;
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(error);
-            }
+            Products = listProduct;
         }
         Action hide;
 

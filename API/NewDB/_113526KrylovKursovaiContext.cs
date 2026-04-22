@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
-namespace Magaz_Stroitelya.NewDB;
+namespace API.NewDB;
 
 public partial class _113526KrylovKursovaiContext : DbContext
 {

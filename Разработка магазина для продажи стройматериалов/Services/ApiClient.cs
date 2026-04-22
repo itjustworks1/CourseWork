@@ -63,15 +63,21 @@ namespace Magaz_Stroitelya.Services
             await GetListAsync<ParameterResponse>($"/api/Parameter");
         public async Task<(ParameterResponse? Data, string? Error)> GetParameter(int id) =>
             await GetAsync<ParameterResponse>($"/api/Parameter/{id}");
+        public async Task<string?> PostParameter(ParameterResponse request) =>
+            await PostJsonAsync("/api/Parameter", request);
+        public async Task<string?> PatchParameter(int id, ParameterResponse request) =>
+            await PatchJsonAsync($"/api/Parameter/{id}", request);
+        public async Task<string?> DeleteParameter(int id) =>
+            await DeleteAsync($"/api/Parameter/{id}");
 
         //Product
         public async Task<(IReadOnlyCollection<ProductResponse> Data, string? Error)> GetListProduct() =>
             await GetListAsync<ProductResponse>($"/api/Product");
         public async Task<(ProductResponse? Data, string? Error)> GetProduct(int id) =>
             await GetAsync<ProductResponse>($"/api/Product/{id}");
-        public async Task<string?> PostProduct(ProductResponse request) =>
+        public async Task<string?> PostProduct(ProductRequest request) =>
             await PostJsonAsync("/api/Product", request);
-        public async Task<string?> PatchProduct(int id, ProductResponse request) =>
+        public async Task<string?> PatchProduct(int id, ProductRequest request) =>
             await PatchJsonAsync($"/api/Product/{id}", request);
         public async Task<string?> DeleteProduct(int id) =>
             await DeleteAsync($"/api/Product/{id}");
@@ -81,12 +87,24 @@ namespace Magaz_Stroitelya.Services
             await GetListAsync<ProductParameterResponse>($"/api/ProductParameter");
         public async Task<(ProductParameterResponse? Data, string? Error)> GetProductParameter(int id) =>
             await GetAsync<ProductParameterResponse>($"/api/ProductParameter/{id}");
+        public async Task<string?> PostProductParameter(ProductParameterResponse request) =>
+            await PostJsonAsync("/api/ProductParameter", request);
+        public async Task<string?> PatchProductParameter(int id, ProductParameterResponse request) =>
+            await PatchJsonAsync($"/api/ProductParameter/{id}", request);
+        public async Task<string?> DeleteProductParameter(int id) =>
+            await DeleteAsync($"/api/ProductParameter/{id}");
 
         //ProductType
         public async Task<(IReadOnlyCollection<ProductTypeResponse> Data, string? Error)> GetListProductType() =>
             await GetListAsync<ProductTypeResponse>($"/api/ProductType");
         public async Task<(ProductTypeResponse? Data, string? Error)> GetProductType(int id) =>
             await GetAsync<ProductTypeResponse>($"/api/ProductType/{id}");
+        public async Task<string?> PostProductType(ProductTypeResponse request) =>
+            await PostJsonAsync("/api/ProductType", request);
+        public async Task<string?> PatchProductType(int id, ProductTypeResponse request) =>
+            await PatchJsonAsync($"/api/ProductType/{id}", request);
+        public async Task<string?> DeleteProductType(int id) =>
+            await DeleteAsync($"/api/ProductType/{id}");
 
 
 

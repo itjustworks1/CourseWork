@@ -84,57 +84,28 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         private async Task SelectAllAsync()
         {
             (var listProductParameter, var error) = await apiClient.GetListProductParameter();
-            try
+            var list = listProductParameter.Where(s => s.ProductId == SelectedProduct.Id).ToArray();
+            for (int i = 0; i < list.Length; i++)
             {
-                var list = listProductParameter.Where(s => s.ProductId == SelectedProduct.Id).ToArray();
-                for (int i = 0; i < list.Length; i++)
+                (var parameter, error) = await apiClient.GetParameter(list[i].ParameterId);
+                var param = new ParameterResponse
                 {
-                    (var parameter, error) = await apiClient.GetParameter(list[i].ParameterId);
-                    try
-                    {
-                        var param = new ParameterResponse
-                        {
-                            Id = list[i].Id,
-                            Title = parameter.Title
-                        };
-                        list[i].Parameter = param;
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show(error);
-                    }
-                    list[i].Product = SelectedProduct;
-                }
-                ProductParameters = [.. list];
-                
+                    Id = list[i].Id,
+                    Title = parameter.Title
+                };
+                list[i].Parameter = param;
+                list[i].Product = SelectedProduct;
             }
-            catch (Exception)
-            {
-                MessageBox.Show(error);
-            }
+            ProductParameters = [.. list];
 
             (var listOrder, error) = await apiClient.GetListOrder();
-            try
-            {
-                ObservableCollection<OrderResponse> orders = new ObservableCollection<OrderResponse>(listOrder);
-                OrderResponse order = orders.FirstOrDefault(s => s.Status == false);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(error);
-            }
+            ObservableCollection<OrderResponse> orders = new ObservableCollection<OrderResponse>(listOrder);
+            OrderResponse order = orders.FirstOrDefault(s => s.Status == false);
 
             (var listOrderStructure, error) = await apiClient.GetListOrderStructure();
-            try
-            {
-                ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure);
-                OrderStructure = orderStructures.FirstOrDefault(s => s.ProductId == SelectedProduct.Id);
-                if (OrderStructure == null) OrderStructure = new OrderStructureResponse(){ Quantity = 0 };
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(error);
-            }
+            ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure);
+            OrderStructure = orderStructures.FirstOrDefault(s => s.ProductId == SelectedProduct.Id);
+            if (OrderStructure == null) OrderStructure = new OrderStructureResponse(){ Quantity = 0 };
 
         }
         Action close;
