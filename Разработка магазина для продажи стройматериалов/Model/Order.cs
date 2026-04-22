@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using Разработка_магазина_для_продажи_стройматериалов.DB;
-using Разработка_магазина_для_продажи_стройматериалов.VMTools;
+using Magaz_Stroitelya.DB;
+using Magaz_Stroitelya.VMTools;
 
-namespace Разработка_магазина_для_продажи_стройматериалов.Model
+namespace Magaz_Stroitelya.Model
 {
     public class Order
     {

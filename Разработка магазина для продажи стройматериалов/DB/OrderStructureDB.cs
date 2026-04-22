@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using Разработка_магазина_для_продажи_стройматериалов.Model;
+using Magaz_Stroitelya.Model;
 
-namespace Разработка_магазина_для_продажи_стройматериалов.DB
+namespace Magaz_Stroitelya.DB
 {
     public class OrderStructureDB
     {
