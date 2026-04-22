@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Разработка_магазина_для_продажи_стройматериалов.View;
-using Разработка_магазина_для_продажи_стройматериалов.VMTools;
+using Magaz_Stroitelya.View;
+using Magaz_Stroitelya.VMTools;
 
-namespace Разработка_магазина_для_продажи_стройматериалов.Model
+namespace Magaz_Stroitelya.Model
 {
     public class Product
     {
