@@ -30,7 +30,7 @@ namespace API.Controllers
             return Ok(list);
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<List<Product>>> Get(int id)
         {
             var obj = await db.Products.FirstOrDefaultAsync(x => x.Id == id);
@@ -38,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] ProductRequest request)
+        public async Task<ActionResult> Post([FromBody] ProductRequest request)
         {
             var obj = new Product
             {
@@ -53,7 +53,7 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> Patch(int id, [FromForm] ProductRequest request)
+        public async Task<ActionResult> Patch(int id, [FromBody] ProductRequest request)
         {
             var obj = await db.Products.FirstOrDefaultAsync(x => x.Id == id);
             if (obj == null)

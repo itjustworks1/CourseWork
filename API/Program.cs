@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Magaz_Stroitelya.NewDB;
+using API.NewDB;
 
 namespace API
 {

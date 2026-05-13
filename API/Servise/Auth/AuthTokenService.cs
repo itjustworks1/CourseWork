@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Magaz_Stroitelya.NewDB;
+using API.NewDB;
 
 namespace API.Servise.Auth
 {

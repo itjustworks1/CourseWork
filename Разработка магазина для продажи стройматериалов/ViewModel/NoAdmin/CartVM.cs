@@ -1,30 +1,35 @@
-﻿using System;
+﻿using Magaz_Stroitelya.Services;
+//using Magaz_Stroitelya.DB;
+//using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.View;
+using Magaz_Stroitelya.VMTools;
+using MVVM.Model.DTO.Response;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
-using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
     public class CartVM : BaseVM
     {
-        private ObservableCollection<Order> orders = new();
-        private ObservableCollection<OrderStructure> orderStructures;
-        private OrderStructure selectedOrderStructure;
-        private ObservableCollection<Product> products = new();
+        private ApiClient apiClient;
+        private Window thisWindow;
+
+        private ObservableCollection<OrderResponse> orders = new();
+        private ObservableCollection<OrderStructureResponse> orderStructures;
+        private OrderStructureResponse selectedOrderStructure;
+        private ObservableCollection<ProductResponse> products = new();
         private string search;
 
-        public ObservableCollection<OrderStructure> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
-        public ObservableCollection<Order> Orders { get => orders; set { orders = value; Signal(); } }
-        public ObservableCollection<Product> Products { get => products; set { products = value; Signal(); } }
-        public OrderStructure SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; Signal(); } }
-        public string Search { get => search; set { search = value; SearchOrderStructure(search); } }
+        public ObservableCollection<OrderStructureResponse> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
+        public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; Signal(); } }
+        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
+        public OrderStructureResponse SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; Signal(); } }
 
         public CommandMvvm PlaceAnOrder { get; set; }
         public CommandMvvm RemoveFromCart { get; set; }
@@ -32,54 +37,111 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         public CommandMvvm OpenProduct { get; set; }
         public CommandMvvm Close { get; set; }
 
-        public CartVM(WindowCart thisWindow)
+        public CartVM(Window thisWindow, ApiClient apiClient)
         {
-            if (Orders.FirstOrDefault(s => s.Status == false) == null)
+            this.thisWindow = thisWindow;
+            this.apiClient = apiClient;
+
+            Task.Run(() => SelectAll());
+            PlaceAnOrder = new CommandMvvm(async () =>
             {
-                NewOrder();
-            }
-            SelectAll();
-            PlaceAnOrder = new CommandMvvm(() =>
-            {
-                Order order = Orders.FirstOrDefault(s => s.Status == false);
+                OrderResponse order = Orders.FirstOrDefault(s => s.Status == false);
                 order.Status = true;
                 order.Date = DateTime.Now;
-                OrderDB.GetDB().Update(order);
+                await apiClient.PatchOrder(order.Id, new OrderRequest
+                {
+                    Date = order.Date,
+                    Status = order.Status,
+                    UserId = order.UserId,
+                });
                 NewOrder();
-                SelectAll();
-            }, () => OrderStructures != null);
+                await Task.Run(() => SelectAll());
+            }, () => OrderStructures != null && OrderStructures.Count != 0);
 
             RemoveFromCart = new CommandMvvm(() =>
             {
-                SelectAll();
+                Task.Run(() => SelectAll());
             }, () => true);
 
             OpenOrder = new CommandMvvm(() =>
             {
                 hide();
-                new WindowListOrders().ShowDialog();
-                SelectAll();
+                new WindowListOrders(apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => true);
 
             OpenProduct = new CommandMvvm(() =>
             {
                 hide();
-                new WindowProduct(SelectedOrderStructure.Product).ShowDialog();
-                SelectAll();
+                new WindowProduct(SelectedOrderStructure.Product, apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => SelectedOrderStructure != null);
         }
 
-        private void SelectAll()
+        private async void SelectAll()
         {
-            OrderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SelectAll().Where(s => s.Order.Status == false).OrderByDescending(t => t.Product.Title));
-            Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
-            Orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll());
+            await SelectOrderStructures();
+            await SelectProductsAsync();
+            await SelectOrdersAsync();
         }
-        private void SearchOrderStructure(string search)
+        public async Task SelectOrderStructures()
         {
-            OrderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SearchOrderStructure(search).Where(s => s.Order.Status == false));
+            var (list, error) = await apiClient.GetListOrderStructure();
+            var listOrderStructure = new ObservableCollection<OrderStructureResponse>(list);
+            for (int i = 0; i < listOrderStructure.Count; i++)
+            {
+                (var product, error) = await apiClient.GetProduct(listOrderStructure[i].ProductId);
+                (var type, error) = await apiClient.GetProductType(product.ProductTypeId);
+                var prod = new ProductResponse
+                {
+                    Id = product.Id,
+                    Title = product.Title,
+                    Value = product.Value,
+                    Quantity = product.Quantity,
+                    ProductTypeId = type.Id,
+                    ProductType = type,
+                };
+                (var order, error) = await apiClient.GetOrder(listOrderStructure[i].OrderId);
+                var ord = new OrderResponse
+                {
+                    Id = order.Id,
+                    Date = order.Date,
+                    Status = order.Status,
+                    UserId = order.UserId,
+                };
+                listOrderStructure[i].Product = prod;
+                listOrderStructure[i].Order = ord;
+            }
+            OrderStructures = [.. listOrderStructure.Where(s => s.Order.Status == false).OrderByDescending(t => t.Product.Title)];
+
+        }
+        public async Task SelectProductsAsync()
+        {
+            var (list, error) = await apiClient.GetListProduct();
+            var listProduct = new ObservableCollection<ProductResponse>(list);
+            for (int i = 0; i < listProduct.Count; i++)
+            {
+                (var productType, error) = await apiClient.GetProductType(listProduct[i].ProductTypeId);
+                var type = new ProductTypeResponse
+                {
+                    Id = productType.Id,
+                    Title = productType.Title
+                };
+                listProduct[i].ProductType = type;
+            }
+            Products = listProduct;
+        }
+        public async Task SelectOrdersAsync()
+        {
+            var (list, error) = await apiClient.GetListOrder();
+            var listOrder = new ObservableCollection<OrderResponse>(list.Where(s => s.UserId == apiClient.UserId));
+            Orders = listOrder;
+            if (Orders.FirstOrDefault(s => s.Status == false && s.UserId == apiClient.UserId) == null)
+            {
+                NewOrder();
+            }
         }
         Action hide;
 
@@ -88,9 +150,14 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             this.hide = hide;
         }
 
-        public void NewOrder()
+        public async void NewOrder()
         {
-            OrderDB.GetDB().Insert(new Order() { Date = DateTime.Now, Status = false });
+            await apiClient.PostOrder(new OrderRequest
+            {
+                Date = DateTime.Now,
+                Status = false,
+                UserId = apiClient.UserId,
+            });
         }
     }
 }

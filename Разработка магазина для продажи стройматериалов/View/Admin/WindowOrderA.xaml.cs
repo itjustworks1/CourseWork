@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Magaz_Stroitelya.Services;
+using MVVM.Model.DTO.Response;
+using MVVM.ViewModel.Admin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,25 +14,22 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.ViewModel;
-using Magaz_Stroitelya.ViewModel.Admin;
-using Magaz_Stroitelya.ViewModel.NoAdmin;
 
-namespace Magaz_Stroitelya.View
+namespace MVVM.View.Admin
 {
     /// <summary>
-    /// Логика взаимодействия для WindowRelationshipsParametersToType.xaml
+    /// Логика взаимодействия для WindowOrderA.xaml
     /// </summary>
-    public partial class WindowAddEditProductType : Window
+    public partial class WindowOrderA : Window
     {
-        public WindowAddEditProductType(ApiClient apiClient)
+        public WindowOrderA(OrderResponse order, ApiClient apiClient)
         {
             InitializeComponent();
-            var vm = new AddEditProductTypeAVM(this, apiClient);
+            var vm = new OrderAVM(this, order, apiClient);
             DataContext = vm;
 
             vm.SetHide(Hide);
+            vm.SetClose(Close);
         }
     }
 }

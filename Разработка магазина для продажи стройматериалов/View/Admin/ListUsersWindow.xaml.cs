@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Magaz_Stroitelya.DTO.Auth;
+using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.Services;
+using Magaz_Stroitelya.ViewModel.NoAdmin;
+using MVVM.ViewModel.Admin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,25 +16,22 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.ViewModel;
-using Magaz_Stroitelya.ViewModel.Admin;
-using Magaz_Stroitelya.ViewModel.NoAdmin;
 
-namespace Magaz_Stroitelya.View
+namespace MVVM.View.Admin
 {
     /// <summary>
-    /// Логика взаимодействия для WindowRelationshipsParametersToType.xaml
+    /// Логика взаимодействия для ListUsersWindow.xaml
     /// </summary>
-    public partial class WindowAddEditProductType : Window
+    public partial class ListUsersWindow : Window
     {
-        public WindowAddEditProductType(ApiClient apiClient)
+        public ListUsersWindow(ApiClient apiClient)
         {
             InitializeComponent();
-            var vm = new AddEditProductTypeAVM(this, apiClient);
+            var vm = new ListUsersVM(this, apiClient);
             DataContext = vm;
 
             vm.SetHide(Hide);
+            vm.SetClose(Close);
         }
     }
 }

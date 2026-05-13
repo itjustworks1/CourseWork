@@ -1,0 +1,45 @@
+﻿<Window x:Class="MVVM.View.Admin.UserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MVVM.View.Admin"
+        mc:Ignorable="d"
+        Title="UserWindow" Height="450" Width="400" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="{Binding SelectedUser.Login}" HorizontalAlignment="Center" Margin="10" FontSize="26"/>
+            <ListBox ItemsSource="{Binding OrdersWithoutCart}" SelectedItem="{Binding SelectedOrder}" Margin="10">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Border BorderThickness="1" BorderBrush="Black">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="340"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding Date}" VerticalAlignment="Center" FontSize="20">
+                                            <TextBlock.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick"
+                                  Command="{Binding DataContext.OpenOrder, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                            </TextBlock.InputBindings>
+                                        </TextBlock>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>

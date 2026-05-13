@@ -11,7 +11,7 @@ using Magaz_Stroitelya.VMTools;
 
 namespace Magaz_Stroitelya.ViewModel
 {
-    internal class RegisterVM : BaseVM
+    public class RegisterVM : BaseVM
     {
         private ApiClient apiClient;
         private Window thisWindow;
@@ -27,16 +27,16 @@ namespace Magaz_Stroitelya.ViewModel
         public string PasswordTwo { get => passwordTwo; set { passwordTwo = value; Signal(); } }
         public string Error { get => error; set { error = value; Signal(); } }
 
-        public ActionCommandMvvm RegisterCommand { get; set; }
+        public CommandMvvm RegisterCommand { get; set; }
         public RegisterVM(Window thisWindow, ApiClient apiClient, Window window)
         {
             this.thisWindow = thisWindow;
             this.apiClient = apiClient;
             this.window = window;
 
-            RegisterCommand = new ActionCommandMvvm(RegisterAsync, () => true);
+            RegisterCommand = new CommandMvvm(RegisterAsync, () => true);
         }
-        private async Task RegisterAsync()
+        private async void RegisterAsync()
         {
             if (Login.Length < 3)
             {
@@ -69,16 +69,17 @@ namespace Magaz_Stroitelya.ViewModel
                 MessageBox.Show(errorMe);
                 return;
             }
+            apiClient.UserId = user.Id;
             if (user.IsAdmin)
             {
-                window.Close();
-                new MainWindowA(apiClient).Show();
+                hide();
+                new MainWindowA(apiClient).ShowDialog();
                 close();
             }
             else
             {
-                window.Close();
-                new MainWindow(apiClient).Show();
+                hide();
+                new MainWindow(apiClient).ShowDialog();
                 close();
             }
 

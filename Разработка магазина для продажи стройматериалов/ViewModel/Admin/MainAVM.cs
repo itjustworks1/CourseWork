@@ -9,39 +9,59 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using MVVM.Model.DTO.Response;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using MVVM.View.Admin;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
     public class MainAVM : BaseVM
     {
+        /* Текущая работа:
+         * Окна: списка пользователей+, пользователя+, в админку заказиков+, +
+         * Наверное сделать статус у заказов, чтобы админ мог его менять. Тогда и в обычку его пихнуть, и сделать невозможным изменение оплаченных заказов
+         * Стоит ли делать удаление заказов?
+         * 
+         * Поиск+ и котегоризация товаров+
+         * Кнопочки "обратно"
+         * 
+         * 
+         * А не стоит ли просто сделать заказы неизменяемыми?
+         * 
+         * Поиск сделал, теперь категории. а теперь и категории
+         */
+
         private ApiClient apiClient;
         private Window thisWindow;
 
         private ProductResponse selectedProduct;
+        private ObservableCollection<ProductResponse> searchProducts = new();
         private ObservableCollection<ProductResponse> products = new();
+        private string search;
+        private ObservableCollection<Filter> filters;
 
         public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
         public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
+        public ObservableCollection<ProductResponse> SearchProducts { get => searchProducts; set { searchProducts = value; Signal(); } }
+        public string Search { get => search; set { search = value; SearchProduct(search); } }
+        public ObservableCollection<Filter> Filters { get => filters; set { filters = value; Signal(); } }
 
         public CommandMvvm AddProduct { get; set; }
         public CommandMvvm OpenUsers { get; set; }
         public CommandMvvm OpenProduct { get; set; }
+        public CommandMvvm ApplyFilters { get; set; }
 
         public MainAVM(Window thisWindow, ApiClient apiClient)
         {
             this.thisWindow = thisWindow;
             this.apiClient = apiClient;
 
-            SelectAll();
+            Task.Run(() => SelectAll());
 
             AddProduct = new CommandMvvm(() =>
             {
                 ProductResponse product = new ProductResponse();
-                bool isEdit = false;
                 hide();
-                new WindowAddEditProduct(product, apiClient, ref isEdit).ShowDialog();
-                SelectAll();
+                new WindowAddEditProduct(product, apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => true);
 
@@ -49,8 +69,8 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             OpenUsers = new CommandMvvm(() =>
             {
                 hide();
-                new WindowCart().ShowDialog();
-                SelectAll();
+                new ListUsersWindow(apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => true);
 
@@ -58,15 +78,21 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             {
                 hide();
                 new WindowProductA(SelectedProduct, apiClient).ShowDialog();
-                SelectAll();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => SelectedProduct != null);
 
+            ApplyFilters = new CommandMvvm(() =>
+            {
+                SearchFilter();
+            }, () => true);
+
         }
 
-        private async Task SelectAll()
+        private async void SelectAll()
         {
             await SelectProductsAsync();
+            await SelectFiltersAsync();
         }
         public async Task SelectProductsAsync()
         {
@@ -74,15 +100,62 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             var listProduct = new ObservableCollection<ProductResponse>(list);
             for (int i = 0; i < list.Count; i++)
             {
-                (var productType, error) = await apiClient.GetParameter(listProduct[i].ProductTypeId);
+                (var productType, error) = await apiClient.GetProductType(listProduct[i].ProductTypeId);
                 var type = new ProductTypeResponse
                 {
-                    Id = listProduct[i].Id,
+                    Id = productType.Id,
                     Title = productType.Title
                 };
                 listProduct[i].ProductType = type;
             }
             Products = listProduct;
+            SearchProducts = Products;
+        }
+        public async Task SelectFiltersAsync()
+        {
+            var (list, error) = await apiClient.GetListProductType();
+            var listType = new ObservableCollection<Filter>();
+            foreach (var item in list)
+            {
+                listType.Add(new Filter
+                {
+                    Text = item,
+                    IsChecked = false
+                });
+            }
+            Filters = listType;
+        }
+        private void SearchProduct(string search)
+        {
+            if (string.IsNullOrEmpty(Search))
+            {
+                SearchProducts = Products;
+            }
+            SearchFilter(search);
+        }
+        private void SearchFilter(string search = "")
+        {
+            if (Filters.Count == Filters.Where(s => !s.IsChecked).Count())
+            {
+                SearchProducts = Products;
+            }
+            else
+            {
+                SearchProducts = new ObservableCollection<ProductResponse>();
+                foreach (var product in Products)
+                {
+                    foreach (var filter in Filters)
+                    {
+                        if (filter.IsChecked && product.ProductType.Id == filter.Text.Id)
+                            SearchProducts.Add(product);
+                    }
+
+                }
+            }
+            if (!string.IsNullOrEmpty(Search))
+            {
+                SearchProducts = [.. SearchProducts.Where(s => s.Title.Contains(Search))];
+            }
         }
         Action hide;
 

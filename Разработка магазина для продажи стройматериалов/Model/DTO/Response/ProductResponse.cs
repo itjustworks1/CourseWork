@@ -1,4 +1,6 @@
-﻿using Magaz_Stroitelya.VMTools;
+﻿using Magaz_Stroitelya.View;
+using Magaz_Stroitelya.ViewModel.Admin;
+using Magaz_Stroitelya.VMTools;
 
 namespace MVVM.Model.DTO.Response
 {
@@ -17,8 +19,20 @@ namespace MVVM.Model.DTO.Response
         {
             AddToCart = new CommandMvvm(() =>
             {
-                //new WindowAddToCart(this).ShowDialog();
+                new WindowAddToCart(this, new Magaz_Stroitelya.Services.ApiClient()).ShowDialog();
             }, () => this != null);
         }
+
+        //public static implicit operator ProductVM(ProductResponse obj)
+        //{
+        //    ProductVM ret = new();
+        //    ret.Id = obj.Id;
+        //    ret.Title = obj.Title;
+        //    ret.Value = obj.Value;
+        //    ret.Quantity = obj.Quantity;
+        //    ret.ProductTypeId = obj.ProductTypeId;
+        //    ret.ProductType = obj.ProductType;
+        //    return ret;
+        //}
     }
 }

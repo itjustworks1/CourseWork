@@ -84,6 +84,13 @@ namespace API.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<UserResponse>> GetList()
+        {
+            var user = await db.Users.ToListAsync();
+            return Ok(user);
+        }
+
         [HttpGet("me/{id:int}")]
         public async Task<ActionResult<UserResponse>> GetMe(int id)
         {

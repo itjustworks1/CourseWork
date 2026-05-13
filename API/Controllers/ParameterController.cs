@@ -23,7 +23,7 @@ namespace API.Controllers
             return Ok(list);
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Parameter>> Get(int id)
         {
             var obj = await db.Parameters.FirstOrDefaultAsync(x => x.Id == id);
@@ -31,11 +31,11 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] ParameterRequest request)
+        public async Task<ActionResult> Post([FromBody] ParameterRequest request)
         {
             var obj = new Parameter
             {
-                Title = request.Title,
+                Title = request.Title
             };
             db.Parameters.Add(obj);
             await db.SaveChangesAsync();
@@ -43,7 +43,7 @@ namespace API.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult> Patch(int id, [FromForm] ParameterRequest request)
+        public async Task<ActionResult> Patch(int id, [FromBody] ParameterRequest request)
         {
             var obj = await db.Parameters.FirstOrDefaultAsync(x => x.Id == id);
             if (obj == null)

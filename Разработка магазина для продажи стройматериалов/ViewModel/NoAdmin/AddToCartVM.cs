@@ -1,60 +1,70 @@
-﻿using System;
+﻿using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.Services;
+//using Magaz_Stroitelya.DB;
+//using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.VMTools;
+using MVVM.Model.DTO.Response;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.VMTools;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
     public class AddToCartVM : BaseVM
     {
         private int quantity;
-        private ObservableCollection<Order> orders = new();
+        private ObservableCollection<OrderResponse> orders = new();
         //private ObservableCollection<OrderStructure> orderStructures;
 
         public int Quantity { get => quantity; set { quantity = value; Signal(); } }
         //public ObservableCollection<OrderStructure> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
         public CommandMvvm Save { get; set; }
         public CommandMvvm Cancel { get; set; }
-        public AddToCartVM(Product product)
+        public AddToCartVM(ProductResponse product, ApiClient apiClient)
         {
-            Save = new CommandMvvm(() =>
+            Save = new CommandMvvm(async () =>
             {
                 //var product = products.FirstOrDefault(d => d.Id == orderStructure.ProductId);
                 //List<OrderStructure> OrderStructures = OrderStructureDB.GetDB().SelectAll();
 
-                OrderStructure orderStructure = OrderStructureDB.GetDB().SelectAll().FirstOrDefault(d => d.ProductId == product.Id &&
-                    OrderDB.GetDB().SelectAll().FirstOrDefault(dd => dd.Id == d.OrderId).Status == false);
+                var (list, error) = await apiClient.GetListOrderStructure();
+                (var listOrder, error) = await apiClient.GetListOrder();
+                var orderStructure = list.FirstOrDefault(s => s.ProductId == product.Id && listOrder.FirstOrDefault(ss => ss.Id == s.OrderId).Status == false);
                 if (orderStructure == null)
                 {
-                    orderStructure = new OrderStructure()
+                    orderStructure = new OrderStructureResponse()
                     {
                         Value = product.Value,
                         Quantity = Quantity,
                         Product = product,
                         ProductId = product.Id
                     };
-                    List<Order> Orders = OrderDB.GetDB().SelectAll();
-                    Order order = Orders.FirstOrDefault(d => d.Status == false);
+                    (var Orders, error) = await apiClient.GetListOrder();
+                    OrderResponse order = Orders.FirstOrDefault(d => d.Status == false);
                     orderStructure.Order = order;
-                    orderStructure.OrderId = order.Id;
+                    orderStructure.OrderId = order.Id;//кoрзины нет
                 }
                 else
                     orderStructure.Quantity += Quantity;
 
                 product.Quantity -= Quantity;
-                ProductDB.GetDB().Update(product);
-                
+                await apiClient.PatchProduct(product.Id, new ProductRequest
+                {
+                    Title = product.Title,
+                    Value = product.Value,
+                    Quantity = product.Quantity,
+                    ProductTypeId = product.ProductTypeId
+                });
+
 
                 if (orderStructure.Id > 0)
-                    OrderStructureDB.GetDB().Update(orderStructure);
+                    await apiClient.PatchOrderStructure(orderStructure.Id, orderStructure);
                 else
-                    OrderStructureDB.GetDB().Insert(orderStructure);
+                    await apiClient.PostOrderStructure(orderStructure);
                 close();
             }, () =>
             Quantity > 0 &&

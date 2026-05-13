@@ -11,7 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.ViewModel;
+using Magaz_Stroitelya.ViewModel.Admin;
 using Magaz_Stroitelya.ViewModel.NoAdmin;
 
 namespace Magaz_Stroitelya.View
@@ -21,10 +23,10 @@ namespace Magaz_Stroitelya.View
     /// </summary>
     public partial class WindowAddEditParameter : Window
     {
-        public WindowAddEditParameter()
+        public WindowAddEditParameter(ApiClient apiClient)
         {
             InitializeComponent();
-            //DataContext = new AddEditParameterVM();
+            DataContext = new AddEditParameterAVM(apiClient);
         }
     }
 }

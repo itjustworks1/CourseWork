@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.ViewModel;
 using Magaz_Stroitelya.ViewModel.NoAdmin;
 
@@ -21,10 +22,10 @@ namespace Magaz_Stroitelya.View
     /// </summary>
     public partial class WindowListOrders : Window
     {
-        public WindowListOrders()
+        public WindowListOrders(ApiClient apiClient)
         {
             InitializeComponent();
-            var vm = new ListOrdersVM(this);
+            var vm = new ListOrdersVM(this, apiClient);
             DataContext = vm;
 
             vm.SetHide(Hide);

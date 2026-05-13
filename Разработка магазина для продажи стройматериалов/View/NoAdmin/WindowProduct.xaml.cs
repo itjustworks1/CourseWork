@@ -11,9 +11,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.Services;
+
+//using Magaz_Stroitelya.Model;
 using Magaz_Stroitelya.ViewModel;
 using Magaz_Stroitelya.ViewModel.NoAdmin;
+using MVVM.Model.DTO.Response;
 
 namespace Magaz_Stroitelya.View
 {
@@ -22,10 +25,10 @@ namespace Magaz_Stroitelya.View
     /// </summary>
     public partial class WindowProduct : Window
     {
-        public WindowProduct(Product product)
+        public WindowProduct(ProductResponse product, ApiClient apiClient)
         {
             InitializeComponent();
-            var vm = new ProductVM(this, product);
+            var vm = new ProductVM(this, apiClient, product);
             DataContext = vm;
 
             vm.SetHide(Hide);

@@ -1,7 +1,5 @@
-﻿//using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.Services;
+﻿using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.View;
-//using Magaz_Stroitelya.DB;
 using Magaz_Stroitelya.VMTools;
 using MVVM.Model.DTO.Response;
 using System;
@@ -12,9 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Magaz_Stroitelya.ViewModel.NoAdmin
+namespace MVVM.ViewModel.Admin
 {
-    public class OrderVM : BaseVM
+    public class OrderAVM : BaseVM
     {
         private ApiClient apiClient;
         private Window thisWindow;
@@ -35,7 +33,7 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         public CommandMvvm OpenProduct { get; set; }
         //public CommandMvvm EditOrder { get; set; }
 
-        public OrderVM(Window thisWindow, OrderResponse order, ApiClient apiClient)
+        public OrderAVM(Window thisWindow, OrderResponse order, ApiClient apiClient)
         {
             this.thisWindow = thisWindow;
             this.apiClient = apiClient;
@@ -56,7 +54,7 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             OpenProduct = new CommandMvvm(() =>
             {
                 hide();
-                new WindowProduct(SelectedOrderStructure.Product, apiClient).ShowDialog();
+                new WindowProductA(SelectedOrderStructure.Product, apiClient).ShowDialog();
                 Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => SelectedOrderStructure != null);

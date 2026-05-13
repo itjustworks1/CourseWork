@@ -1,6 +1,4 @@
-﻿using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.Services;
+﻿using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.View;
 using Magaz_Stroitelya.VMTools;
 using System;
@@ -40,14 +38,14 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             this.apiClient = apiClient;
             SelectedProduct = product;
 
-            SelectAllAsync();
-            AddToCart = new CommandMvvm(() =>
-            {
-                //new WindowAddToCart(SelectedProduct).ShowDialog();
-                SelectAllAsync();
-            }, () => SelectedProduct != null);
+            Task.Run(() => SelectAll());
+            //AddToCart = new CommandMvvm(() =>
+            //{
+            //    //new WindowAddToCart(SelectedProduct).ShowDialog();
+            //    Task.Run(() => SelectAll());
+            //}, () => SelectedProduct != null);
 
-            EditProduct = new CommandMvvm(() =>
+            EditProduct = new CommandMvvm(async () =>
             {
                 ProductResponse product1 = new ProductResponse()
                 {
@@ -58,30 +56,48 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
                     Title = SelectedProduct.Title,
                     Value = SelectedProduct.Value
                 };
-                bool isEdit = false;
                 hide();
-                new WindowAddEditProduct(SelectedProduct, apiClient, ref isEdit).ShowDialog();
-                if (!isEdit) SelectedProduct = product1;
-                SelectAllAsync();
+                new WindowAddEditProduct(SelectedProduct, apiClient).ShowDialog();
+                //if (!isEdit) SelectedProduct = product1;
+                EditSelectProduct();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => true);
             //
             RemoveProduct = new CommandMvvm(() =>
             {
                 //new WindowRemoveProduct(SelectedProduct).ShowDialog();
-                SelectAllAsync();
+                Task.Run(() => SelectAll());
             }, () => SelectedProduct != null);
             
-            OpenCart = new CommandMvvm(() =>
-            {
-                hide();
-                new WindowCart().ShowDialog();
-                SelectAllAsync();
-                thisWindow.ShowDialog();
-            }, () => true);
+            //OpenCart = new CommandMvvm(() =>
+            //{
+            //    hide();
+            //    new WindowCart().ShowDialog();
+            //    Task.Run(() => SelectAll());
+            //    thisWindow.ShowDialog();
+            //}, () => true);
         }
 
-        private async Task SelectAllAsync()
+        private async Task EditSelectProduct()
+        {
+            var (prod, error) = await apiClient.GetProduct(SelectedProduct.Id);
+            (var type, error) = await apiClient.GetProductType(prod.ProductTypeId);
+            SelectedProduct = new ProductResponse
+            {
+                Id = prod.Id,
+                Title = prod.Title,
+                Value = prod.Value,
+                Quantity = prod.Quantity,
+                ProductTypeId = prod.ProductTypeId,
+                ProductType = new ProductTypeResponse
+                {
+                    Id = type.Id,
+                    Title = type.Title,
+                }
+            };
+        }
+        private async void SelectAll()
         {
             (var listProductParameter, var error) = await apiClient.GetListProductParameter();
             var list = listProductParameter.Where(s => s.ProductId == SelectedProduct.Id).ToArray();
@@ -103,7 +119,7 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             OrderResponse order = orders.FirstOrDefault(s => s.Status == false);
 
             (var listOrderStructure, error) = await apiClient.GetListOrderStructure();
-            ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure);
+            ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure.Where(s => s.OrderId == order.Id));
             OrderStructure = orderStructures.FirstOrDefault(s => s.ProductId == SelectedProduct.Id);
             if (OrderStructure == null) OrderStructure = new OrderStructureResponse(){ Quantity = 0 };
 

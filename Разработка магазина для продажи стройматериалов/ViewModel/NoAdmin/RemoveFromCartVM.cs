@@ -1,12 +1,14 @@
-﻿using System;
+﻿//using Magaz_Stroitelya.DB;
+//using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.Services;
+using Magaz_Stroitelya.VMTools;
+using MVVM.Model.DTO.Response;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.VMTools;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
@@ -17,21 +19,28 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         public int Quantity { get => quantity; set { quantity = value; Signal(); } }
         public CommandMvvm Remove { get; set; }
         public CommandMvvm Cancel { get; set; }
-        public RemoveFromCartVM(OrderStructure orderStructure)
+        public RemoveFromCartVM(OrderStructureResponse orderStructure, ApiClient apiClient)
         {
             //...
-            Remove = new CommandMvvm(() =>
+            Remove = new CommandMvvm(async () =>
             {
-                Product product = ProductDB.GetDB().SelectAll().FirstOrDefault(d => d.Id == orderStructure.ProductId);
+                var (list, error) = await apiClient.GetListProduct();
+                ProductResponse product = list.FirstOrDefault(d => d.Id == orderStructure.ProductId);
                 product.Quantity += Quantity;
                 if (orderStructure.Quantity == Quantity)
-                    OrderStructureDB.GetDB().Remove(orderStructure);
+                    await apiClient.DeleteOrderStructure(orderStructure.Id);
                 else
                 {
                     orderStructure.Quantity -= Quantity;
-                    OrderStructureDB.GetDB().Update(orderStructure);
+                    await apiClient.PatchOrderStructure(orderStructure.Id, orderStructure);
                 }
-                ProductDB.GetDB().Update(product);
+                await apiClient.PatchProduct(product.Id, new ProductRequest
+                {
+                    Title = product.Title,
+                    Quantity = product.Quantity,
+                    Value = product.Value,
+                    ProductTypeId = product.ProductTypeId
+                });
                 close();
             }, () =>
             Quantity > 0 &&

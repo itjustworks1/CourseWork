@@ -20,10 +20,10 @@ namespace Magaz_Stroitelya.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(ApiClient client)
+        public MainWindow(ApiClient apiClient)
         {
             InitializeComponent();
-            var vm = new MainVM(this);
+            var vm = new MainVM(this, apiClient);
             DataContext = vm;
 
             vm.SetHide(Hide);

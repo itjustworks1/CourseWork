@@ -25,10 +25,10 @@ namespace Magaz_Stroitelya.View
     /// </summary>
     public partial class WindowAddEditProduct : Window
     {
-        public WindowAddEditProduct(ProductResponse product, ApiClient apiClient, ref bool isEdit)
+        public WindowAddEditProduct(ProductResponse product, ApiClient apiClient)
         {
             InitializeComponent();
-            var vm = new AddEditProductAVM(this, apiClient, product, ref isEdit);
+            var vm = new AddEditProductAVM(this, apiClient, product);
             DataContext = vm;
 
             vm.SetHide(Hide);

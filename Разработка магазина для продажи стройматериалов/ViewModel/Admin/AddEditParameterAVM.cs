@@ -1,19 +1,21 @@
-﻿using System;
+﻿using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.Services;
+using Magaz_Stroitelya.View;
+using Magaz_Stroitelya.VMTools;
+using MVVM.Model.DTO.Response;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
-using MVVM.Model.DTO.Response;
 
 namespace Magaz_Stroitelya.ViewModel.Admin
 {
     public class AddEditParameterAVM : BaseVM
     {
+        private ApiClient apiClient;
+
         private ParameterResponse selectedParameter;
         private ObservableCollection<ParameterResponse> parameters = new();
 
@@ -24,35 +26,39 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         public CommandMvvm EditParameter { get; set; }
         public CommandMvvm RemoveParameter { get; set; }
 
-        public AddEditParameterAVM()
+        public AddEditParameterAVM(ApiClient apiClient)
         {
+            this.apiClient = apiClient;
+
             SelectedParameter = new ParameterResponse();
-            SelectAll();
-            AddParameter = new CommandMvvm(() =>
+            Task.Run(() => SelectAll());
+            AddParameter = new CommandMvvm(async () =>
             {
-                //ParameterDB.GetDB().Insert(SelectedParameter);
-                SelectAll();
+                await apiClient.PostParameter(SelectedParameter);
+                await Task.Run(() => SelectAll());
             }, () => SelectedParameter != null &&
             !string.IsNullOrEmpty(SelectedParameter.Title));
 
-            EditParameter = new CommandMvvm(() =>
+            EditParameter = new CommandMvvm(async () =>
             {
-                //ParameterDB.GetDB().Update(SelectedParameter);
-                SelectAll();
+                await apiClient.PatchParameter(SelectedParameter.Id,SelectedParameter);
+                await Task.Run(() => SelectAll());
             }, () => SelectedParameter != null &&
             !string.IsNullOrEmpty(SelectedParameter.Title));
             
-            RemoveParameter = new CommandMvvm(() =>
+            RemoveParameter = new CommandMvvm(async () =>
             {
-                //ParameterDB.GetDB().Remove(SelectedParameter);
-                SelectAll();
+                await apiClient.DeleteParameter(SelectedParameter.Id);
+                await Task.Run(() => SelectAll());
             }, () => SelectedParameter != null &&
             !string.IsNullOrEmpty(SelectedParameter.Title));
         }
 
-        private void SelectAll()
+        private async void SelectAll()
         {
-            //Parameters = new ObservableCollection<Parameter>(ParameterDB.GetDB().SelectAll());
+            var (list, error) = await apiClient.GetListParameter();
+            var listParameter = new ObservableCollection<ParameterResponse>(list);
+            Parameters = listParameter;
         }
     }
 }

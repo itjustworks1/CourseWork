@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Magaz_Stroitelya.DTO.Auth;
 using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.View;
@@ -16,55 +17,68 @@ namespace Magaz_Stroitelya.ViewModel
         private ApiClient apiClient;
         private Window thisWindow;
         private string login = "";
-        private string password = string.Empty;
+        private PasswordBox passwordBox;
         private string error = "";
+        bool isLogin = false;
 
         public string Login { get => login; set { login = value; Signal(); } }
-        public string Password { get => password; set { password = value; Signal(); } }
         public string Error { get => error; set { error = value; Signal(); } }
 
-        public ActionCommandMvvm LoginCommand { get; set; }
-        public ActionCommandMvvm RegisterCommand { get; set; }
-        public LoginVM(Window thisWindow, ApiClient apiClient)
+        public CommandMvvm LoginCommand { get; set; }
+        public CommandMvvm RegisterCommand { get; set; }
+        public LoginVM(Window thisWindow, ApiClient apiClient, PasswordBox password)
         {
             this.thisWindow = thisWindow;
             this.apiClient = apiClient;
+            passwordBox = password;
 
-            LoginCommand = new ActionCommandMvvm(LoginAsync, () => true);
-            RegisterCommand = new ActionCommandMvvm(RegisterAsync, () => true);
+            LoginCommand = new CommandMvvm(LoginAsync, () => true);
+
+            RegisterCommand = new CommandMvvm(RegisterAsync, () => true);
         }
-        private async Task LoginAsync()
+        private async void LoginAsync()
         {
-            var (data, error) = await apiClient.LoginAsync(Login, Password);
+            if (isLogin)
+            {
+                return;
+            }
+            isLogin = true;
+            var (data, error) = await apiClient.LoginAsync(Login, passwordBox.Password);
             if (data is null)
             {
                 Error = $"{error}";
+                isLogin = false;
                 return;
             }
 
             Error = "";
-            Password = string.Empty; 
+            passwordBox.Password = string.Empty; 
             apiClient.SetAccessToken(data.Token);
             var (user, errorMe) = await apiClient.GetMe(data.UserId);
             if (user == null)
             {
                 MessageBox.Show(errorMe);
+                isLogin = false;
                 return;
             }
+            apiClient.UserId = user.Id;
             if (user.IsAdmin)
             {
                 hide();
                 new MainWindowA(apiClient).ShowDialog();
+                isLogin = false;
                 thisWindow.ShowDialog();
             }
             else
             {
                 hide();
                 new MainWindow(apiClient).ShowDialog();
+                isLogin = false;
                 thisWindow.ShowDialog();
             }
+            isLogin = false;
         }
-        private async Task RegisterAsync()
+        private void RegisterAsync()
         {
             hide();
             new RegisterWindow(thisWindow).ShowDialog();

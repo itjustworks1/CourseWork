@@ -1,86 +1,174 @@
-﻿using System;
+﻿using Magaz_Stroitelya.Services;
+//using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.View;
+//using Magaz_Stroitelya.DB;
+using Magaz_Stroitelya.VMTools;
+using MVVM.Model.DTO.Response;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.VMTools;
+using System.Windows;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
     public class ProductVM : BaseVM
     {
-        private Product selectedProduct;
-        private ObservableCollection<Product> products = new();
-        private ObservableCollection<ProductParameter> productParameters = new();
-        private OrderStructure orderStructure = new();
+        private ApiClient apiClient;
+        private Window thisWindow;
 
-        public OrderStructure OrderStructure { get => orderStructure; set { orderStructure = value; Signal(); } }
-        public ObservableCollection<ProductParameter> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
-        public ObservableCollection<Product> Products { get => products; set { products = value; Signal(); } }
-        public Product SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
+        private ProductResponse selectedProduct;
+        private ObservableCollection<ProductResponse> products = new();
+        private ObservableCollection<ProductParameterResponse> productParameters = new();
+        private OrderStructureResponse orderStructure = new();
+
+        public OrderStructureResponse OrderStructure { get => orderStructure; set { orderStructure = value; Signal(); } }
+        public ObservableCollection<ProductParameterResponse> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
+        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
+        public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
 
         public CommandMvvm AddToCart { get; set; }
         public CommandMvvm EditProduct { get; set; }
         public CommandMvvm RemoveProduct { get; set; }
         public CommandMvvm OpenCart { get; set; }
 
-        public ProductVM(WindowProduct thisWindow, Product product)
+        public ProductVM(WindowProduct thisWindow, ApiClient apiClient, ProductResponse product)
         {
+            this.thisWindow = thisWindow;
+            this.apiClient = apiClient;
+
             SelectedProduct = product;
-            SelectAll();
+            Task.Run(() => SelectAll());
             AddToCart = new CommandMvvm(() =>
             {
-                new WindowAddToCart(SelectedProduct).ShowDialog();
-                SelectAll();
+                new WindowAddToCart(SelectedProduct, apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
             }, () => SelectedProduct != null);
 
-            EditProduct = new CommandMvvm(() =>
-            {
-                //Product product1 = new Product() 
-                //{ 
-                //    Id = SelectedProduct.Id,
-                //    ProductType = SelectedProduct.ProductType,
-                //    ProductTypeId = SelectedProduct.ProductTypeId,
-                //    Quantity = SelectedProduct.Quantity,
-                //    Title = SelectedProduct.Title,
-                //    Value = SelectedProduct.Value 
-                //};
-                bool isEdit = false;
-                hide();
-                //new WindowAddEditProduct(SelectedProduct, ref isEdit).ShowDialog();
-                //if (!isEdit) SelectedProduct = product1;
-                SelectAll();
-                thisWindow.ShowDialog();
-            }, () => true);
-            //
-            RemoveProduct = new CommandMvvm(() =>
-            {
-                new WindowRemoveProduct(SelectedProduct).ShowDialog();
-                SelectAll();
-            }, () => SelectedProduct != null);
+            //EditProduct = new CommandMvvm(() =>
+            //{
+            //    //Product product1 = new Product() 
+            //    //{ 
+            //    //    Id = SelectedProduct.Id,
+            //    //    ProductType = SelectedProduct.ProductType,
+            //    //    ProductTypeId = SelectedProduct.ProductTypeId,
+            //    //    Quantity = SelectedProduct.Quantity,
+            //    //    Title = SelectedProduct.Title,
+            //    //    Value = SelectedProduct.Value 
+            //    //};
+            //    bool isEdit = false;
+            //    hide();
+            //    //new WindowAddEditProduct(SelectedProduct, ref isEdit).ShowDialog();
+            //    //if (!isEdit) SelectedProduct = product1;
+            //    Task.Run(() => SelectAll());
+            //    thisWindow.ShowDialog();
+            //}, () => true);
+
+            //RemoveProduct = new CommandMvvm(() =>
+            //{
+            //    new WindowRemoveProduct(SelectedProduct, apiClient).ShowDialog();
+            //    Task.Run(() => SelectAll());
+            //}, () => SelectedProduct != null);
             
             OpenCart = new CommandMvvm(() =>
             {
                 hide();
-                new WindowCart().ShowDialog();
-                SelectAll();
+                new WindowCart(apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => true);
         }
 
-        private void SelectAll()
+        private async void SelectAll()
         {
-            Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll());
-            ProductParameters = new ObservableCollection<ProductParameter>(ProductParameterDB.GetDB().SelectAll().Where(s => s.ProductId == SelectedProduct.Id));
-            ObservableCollection<Order> orders = new ObservableCollection<Order>(OrderDB.GetDB().SelectAll());
-            Order order = orders.FirstOrDefault(s => s.Status == false);
-            ObservableCollection<OrderStructure> orderStructures = new ObservableCollection<OrderStructure>(OrderStructureDB.GetDB().SelectAll().Where(s => s.OrderId == order.Id));
+            (var listProductParameter, var error) = await apiClient.GetListProductParameter();
+            var list = listProductParameter.Where(s => s.ProductId == SelectedProduct.Id).ToArray();
+            for (int i = 0; i < list.Length; i++)
+            {
+                (var parameter, error) = await apiClient.GetParameter(list[i].ParameterId);
+                var param = new ParameterResponse
+                {
+                    Id = list[i].Id,
+                    Title = parameter.Title
+                };
+                list[i].Parameter = param;
+                list[i].Product = SelectedProduct;
+            }
+            ProductParameters = [.. list];
+
+            (var listOrder, error) = await apiClient.GetListOrder();
+            ObservableCollection<OrderResponse> orders = new ObservableCollection<OrderResponse>(listOrder);
+            OrderResponse order = orders.FirstOrDefault(s => s.Status == false);
+
+            (var listOrderStructure, error) = await apiClient.GetListOrderStructure();
+            ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure.Where(s => s.OrderId == order.Id));
             OrderStructure = orderStructures.FirstOrDefault(s => s.ProductId == SelectedProduct.Id);
-            if (OrderStructure == null) OrderStructure = new OrderStructure(){ Quantity = 0 };
+            if (OrderStructure == null) OrderStructure = new OrderStructureResponse() { Quantity = 0 };
+
+            //await SelectProductsAsync();
+            //await SelectProductParametersAsync();
+            //await SelectOrderStructure();
+            //if (OrderStructure == null) OrderStructure = new OrderStructureResponse() { Quantity = 0 };
+        }
+        public async Task SelectProductsAsync()
+        {
+            var (list, error) = await apiClient.GetListProduct();
+            var listProduct = new ObservableCollection<ProductResponse>(list);
+            for (int i = 0; i < list.Count; i++)
+            {
+                (var productType, error) = await apiClient.GetParameter(listProduct[i].ProductTypeId);
+                var type = new ProductTypeResponse
+                {
+                    Id = listProduct[i].Id,
+                    Title = productType.Title
+                };
+                listProduct[i].ProductType = type;
+            }
+            Products = listProduct;
+        }
+        public async Task SelectProductParametersAsync()
+        {
+            var (list, error) = await apiClient.GetListProductParameter();
+            var listProductParameter = new ObservableCollection<ProductParameterResponse>(list);
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                (var listIProductType, error) = await apiClient.GetListProductType();
+                var listProductType = new ObservableCollection<ProductTypeResponse>(listIProductType);
+
+                (var product, error) = await apiClient.GetProduct(listProductParameter[i].ProductId);
+                var prod = new ProductResponse
+                {
+                    Id = product.Id,
+                    Title = product.Title,
+                    Value = product.Value,
+                    Quantity = product.Quantity,
+                    ProductTypeId = product.ProductTypeId,
+                    ProductType = listProductType.FirstOrDefault(s => s.Id == product.ProductTypeId),
+                };
+                (var parameter, error) = await apiClient.GetParameter(listProductParameter[i].ParameterId);
+                var param = new ParameterResponse
+                {
+                    Id = parameter.Id,
+                    Title = parameter.Title
+                };
+                listProductParameter[i].Product = prod;
+                listProductParameter[i].Parameter = param;
+            }
+            ProductParameters = [..listProductParameter.Where(s => s.ProductId == SelectedProduct.Id)];
+        }
+        public async Task SelectOrderStructure()
+        {
+            var (list, error) = await apiClient.GetListOrder();
+            ObservableCollection<OrderResponse> orders = new ObservableCollection<OrderResponse>(list);
+            OrderResponse order = orders.FirstOrDefault(s => s.Status == false);
+
+            (var listOrderStructure, error) = await apiClient.GetListOrderStructure();
+            ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure.Where(s => s.OrderId == order.Id));
+            OrderStructure = orderStructures.FirstOrDefault(s => s.ProductId == SelectedProduct.Id);
         }
         Action close;
 

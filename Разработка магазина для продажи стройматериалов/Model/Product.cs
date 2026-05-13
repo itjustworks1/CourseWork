@@ -24,7 +24,7 @@ namespace Magaz_Stroitelya.Model
         {
             AddToCart = new CommandMvvm(() =>
             {
-                new WindowAddToCart(this).ShowDialog();
+                //new WindowAddToCart(this).ShowDialog();
             }, () => this != null);
         }
     }

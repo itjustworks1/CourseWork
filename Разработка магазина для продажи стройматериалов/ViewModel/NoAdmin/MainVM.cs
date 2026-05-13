@@ -1,14 +1,16 @@
-﻿using System;
+﻿//using Magaz_Stroitelya.Model;
+using Magaz_Stroitelya.Services;
+using Magaz_Stroitelya.View;
+using Magaz_Stroitelya.VMTools;
+using MVVM.Model.DTO.Response;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.VMTools;
 using System.Windows;
+using System.Windows.Data;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
@@ -18,7 +20,6 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
            // стоит ли мне вообще удалять Parameter и ProductType?; думаю можно удалять но при условии что их нигде нет; но тогда придеться страдать с проверками
      * Что-то сделать с поиском ?
      * Разобраться с ценами в заказе // я хз, вроде сделал
-     * У всех Листов добавить верт скролл
      * В WindowProduct [не меняется TextBlock] + [доделать вывод инфы] + хотелось бы чуть исправить изменения
      * В WindowAddEditProduct [сломался Parameter] + хотелось что бы ComboBox менялся от выбранных параметров;
            теперь просто не добавляется параметр + почему всё сразу меняется + [при удалении параметра накричали]
@@ -30,86 +31,129 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
      * [В WindowListOrders сделать отдельно для карзины(false)].
      * [Исправить кнопку добавление/удаления товара в/из корзину/ы, редактирование Order].
      */
-
-
-    /* ЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫ
-     * No Admin:
-     * мейн- MainVM
-     * (+в корзину)- AddToCartVM
-     * корзина- CartVM
-     * (-из корзины)- RemoveFromCartVM
-     * заказы- ListOrdersVM
-     * заказ- OrderVM
-     * инфа продукта- ProductVM
-     * 
-     * Admin:
-     * мейн- MainAVM
-     * заказыПо- 
-     * заказ- 
-     * все изменения:
-     *  продукт- AddEditProductAVM
-     *  параметр- AddEditParameterAVM
-     *  типПр- AddEditProductTypeAVM
-     *  заказ- 
-     * инфа продукта- 
-     * удаление колва продуктов- RemoveProductVM
-     * 
-     * //и наверное список пользователей
-     * 
-     * Общие:
-     * логин- LoginVM
-     * регистрация- RegisterVM
-     * 
-     */
     public class MainVM : BaseVM
     {
-        private Product selectedProduct;
-        private ObservableCollection<Product> products = new();
-        private string search;
+        private ApiClient apiClient;
+        private Window thisWindow;
 
-        public ObservableCollection<Product> Products { get => products; set { products = value; Signal(); } }
-        public Product SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
+        private ProductResponse selectedProduct;
+        private ObservableCollection<ProductResponse> searchProducts = new();
+        private ObservableCollection<ProductResponse> products = new();
+        private string search;
+        private ObservableCollection<Filter> filters;
+
+        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
+        public ObservableCollection<ProductResponse> SearchProducts { get => searchProducts; set { searchProducts = value; Signal(); } }
+        public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
         public string Search { get => search; set { search = value; SearchProduct(search); } }
+        public ObservableCollection<Filter> Filters { get => filters; set { filters = value; Signal(); } }
 
         public CommandMvvm AddToCart { get; set; }
         public CommandMvvm OpenCart { get; set; }
         public CommandMvvm OpenProduct { get; set; }
+        public CommandMvvm ApplyFilters { get; set; }
 
-        public MainVM(MainWindow thisWindow)
+        public MainVM(MainWindow thisWindow, ApiClient apiClient)
         {
-            SelectAll();
+            this.thisWindow = thisWindow;
+            this.apiClient = apiClient;
 
+            Task.Run(() => SelectAll());
 
             AddToCart = new CommandMvvm(() =>
             {
-                SelectAll();
+                Task.Run(() => SelectAll());
             }, () => true);
 
             OpenCart = new CommandMvvm(() =>
             {
                 hide();
-                new WindowCart().ShowDialog();
-                SelectAll();
+                new WindowCart(apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => true);
 
             OpenProduct = new CommandMvvm(() =>
             {
                 hide();
-                new WindowProduct(SelectedProduct).ShowDialog();
-                SelectAll();
+                new WindowProduct(SelectedProduct, apiClient).ShowDialog();
+                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
             }, () => SelectedProduct != null);
 
+            ApplyFilters = new CommandMvvm(() =>
+            {
+                SearchFilter();
+            }, () => true);
         }
 
-        private void SelectAll()
+        private async void SelectAll()
         {
-            Products = new ObservableCollection<Product>(ProductDB.GetDB().SelectAll().OrderByDescending(t => t.Title));
+            await SelectProductsAsync();
+            await SelectFiltersAsync();
+        }
+        public async Task SelectProductsAsync()
+        {
+            var (list, error) = await apiClient.GetListProduct();
+            var listProduct = new ObservableCollection<ProductResponse>(list);
+            for (int i = 0; i < list.Count; i++)
+            {
+                (var productType, error) = await apiClient.GetProductType(listProduct[i].ProductTypeId);
+                var type = new ProductTypeResponse
+                {
+                    Id = productType.Id,
+                    Title = productType.Title
+                };
+                listProduct[i].ProductType = type;
+            }
+            Products = listProduct;
+            SearchProducts = Products;
+        }
+        public async Task SelectFiltersAsync()
+        {
+            var (list, error) = await apiClient.GetListProductType();
+            var listType = new ObservableCollection<Filter>();
+            foreach (var item in list)
+            {
+                listType.Add(new Filter
+                {
+                    Text = item,
+                    IsChecked = false
+                });
+            }
+            Filters = listType;
         }
         private void SearchProduct(string search)
         {
-            Products = new ObservableCollection<Product>(ProductDB.GetDB().SearchProduct(search));
+            if (string.IsNullOrEmpty(Search))
+            {
+                SearchProducts = Products;
+            }
+            SearchFilter(search);
+        }
+        private void SearchFilter(string search = "")
+        {
+            if (Filters.Count == Filters.Where(s => !s.IsChecked).Count())
+            {
+                SearchProducts = Products;
+            }
+            else
+            {
+                SearchProducts = new ObservableCollection<ProductResponse>();
+                foreach (var product in Products)
+                {
+                    foreach (var filter in Filters)
+                    {
+                        if (filter.IsChecked && product.ProductType.Id == filter.Text.Id)
+                            SearchProducts.Add(product);
+                    }
+
+                }
+            }
+            if (!string.IsNullOrEmpty(Search))
+            {
+                SearchProducts = [.. SearchProducts.Where(s => s.Title.Contains(Search))];
+            }
         }
         Action hide;
 
@@ -117,5 +161,10 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         {
             this.hide = hide;
         }
+    }
+    public class Filter : BaseVM
+    {
+        public ProductTypeResponse Text { get;set;}
+        public bool IsChecked { get; set;}
     }
 }

@@ -31,11 +31,11 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromForm] OrderRequest request)
+        public async Task<ActionResult> Post([FromBody] OrderRequest request)
         {
             var obj = new Order
             {
-                Date = DateTime.Now,
+                Date = request.Date,
                 Status = request.Status,
                 UserId = request.UserId,
             };
@@ -44,16 +44,17 @@ namespace API.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "Accountant")]
+        //[Authorize(Roles = "Accountant")]
         [HttpPatch("{id}")]
-        public async Task<ActionResult> Patch(int id, [FromForm] OrderRequest request)
+        public async Task<ActionResult> Patch(int id, [FromBody] OrderRequest request)
         {
             var obj = await db.Orders.FirstOrDefaultAsync(x => x.Id == id);
             if (obj == null)
                 return NotFound();
 
-            obj.Date = DateTime.Now;
+            obj.Date = request.Date;
             obj.Status = request.Status;
+            obj.UserId = request.UserId;
             await db.SaveChangesAsync();
             return Ok();
         }

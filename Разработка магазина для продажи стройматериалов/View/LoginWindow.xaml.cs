@@ -24,7 +24,7 @@ namespace Magaz_Stroitelya.View
         public LoginWindow()
         {
             InitializeComponent();
-            var vm = new LoginVM(this, new ApiClient());
+            var vm = new LoginVM(this, new ApiClient(), PBox);//пароль надо
             DataContext = vm;
 
             vm.SetHide(Hide);

@@ -1,37 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.Model;
+﻿using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.View;
 using Magaz_Stroitelya.VMTools;
 using MVVM.Model.DTO.Response;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace Magaz_Stroitelya.ViewModel.Admin
 {
     public class AddEditProductTypeAVM : BaseVM
     {
+        [DllImport("kernel32.dll")]
+        private static extern bool AllocConsole();
+
+
+
+        private ApiClient apiClient;
+        private Window thisWindow;
+
         private ProductTypeResponse selectedProductType;
         private ParameterResponse selectedParameter;
         private ObservableCollection<ProductTypeResponse> productTypes = new();
         private ObservableCollection<ParameterResponse> parameters = new();
-        //бебебе ProductTypeParameter не request
-        private ObservableCollection<ProductTypeParameter> productTypeParameters = new();
-        private ObservableCollection<ProductTypeParameter> selectedProductTypeParametersOnProductType = new();
-        private ProductTypeParameter selectedProductTypeParameter;
+        private ObservableCollection<ProductTypeParameterResponse> productTypeParameters = new();
+        private ObservableCollection<ProductTypeParameterResponse> selectedProductTypeParametersOnProductType = new();
+        private ProductTypeParameterResponse selectedProductTypeParameter;
 
-        public ProductTypeParameter SelectedProductTypeParameter { get => selectedProductTypeParameter; set { selectedProductTypeParameter = value; Signal(); } }
-        public ObservableCollection<ProductTypeParameter> ProductTypeParameters { get => productTypeParameters; set { productTypeParameters = value; Signal(); } }
-        public ObservableCollection<ProductTypeParameter> SelectedProductTypeParametersOnProductType { get => selectedProductTypeParametersOnProductType; set { selectedProductTypeParametersOnProductType = value; Signal(); } }
+        public ProductTypeParameterResponse SelectedProductTypeParameter { get => selectedProductTypeParameter; set { selectedProductTypeParameter = value; Signal(); } }
+        public ObservableCollection<ProductTypeParameterResponse> ProductTypeParameters { get => productTypeParameters; set { productTypeParameters = value; Signal(); } }
+        public ObservableCollection<ProductTypeParameterResponse> SelectedProductTypeParametersOnProductType { get => selectedProductTypeParametersOnProductType; set { selectedProductTypeParametersOnProductType = value; Signal(); } }
         public ObservableCollection<ParameterResponse> Parameters { get => parameters; set { parameters = value; Signal(); } }
         public ObservableCollection<ProductTypeResponse> ProductTypes { get => productTypes; set { productTypes = value; Signal(); } }
         public ParameterResponse SelectedParameter { get => selectedParameter; set { selectedParameter = value; Signal(); } }
-        public ProductTypeResponse SelectedProductType { get => selectedProductType; set { selectedProductType = value;
-                //if (SelectedProductType != null) SelectedProductTypeParametersOnProductType = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll().Where(s => s.ProductTypeId == SelectedProductType.Id));
-                Signal(); } }
+        public ProductTypeResponse SelectedProductType 
+        { 
+            get => selectedProductType; 
+            set 
+            { 
+                selectedProductType = value;
+                if (SelectedProductType != null)
+                {
+                    SelectPTP(value);
+                }
+                Signal();
+            } 
+        }
 
         public CommandMvvm AddProductType { get; set; }
         public CommandMvvm EditProductType { get; set; }
@@ -41,82 +59,173 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         public CommandMvvm RemoveParameter { get; set; }
         public CommandMvvm OpenAddEditParameter { get; set; }
 
-        public AddEditProductTypeAVM(WindowAddEditProductType thisWindow)
+        public AddEditProductTypeAVM(Window thisWindow, ApiClient apiClient)
         {
-            SelectAll();
-            AddProductType = new CommandMvvm(() =>
+            //AllocConsole();
+            //Console.WriteLine("Hello drodd");
+            this.thisWindow = thisWindow;
+            this.apiClient = apiClient;
+
+            Task.Run(() => SelectAll());
+            AddProductType = new CommandMvvm(async () =>
             {
-                //ProductTypeDB.GetDB().Insert(SelectedProductType);
-                SelectAll();
+                await apiClient.PostProductType(SelectedProductType);
+                await Task.Run(() => SelectAll());
             }, () => SelectedProductType != null &&
             !string.IsNullOrEmpty(SelectedProductType.Title));
 
-            EditProductType = new CommandMvvm(() =>
+            EditProductType = new CommandMvvm(async () =>
             {
-                //ProductTypeDB.GetDB().Update(SelectedProductType);
-                SelectAll();
+                await apiClient.PatchProductType(SelectedProductType.Id, SelectedProductType);
+                await Task.Run(() => SelectAll());
             }, () => SelectedProductType != null &&
              !string.IsNullOrEmpty(SelectedProductType.Title));
 
             RemoveProductType = new CommandMvvm(() =>
             {
 
-                SelectAll();
+                Task.Run(() => SelectAll());
             }, () => SelectedProductType != null &&
             !string.IsNullOrEmpty(SelectedProductType.Title));
 
-            AddParameter = new CommandMvvm(() =>
+            AddParameter = new CommandMvvm(async () =>
             {
-                //ProductTypeParameter productTypeParameter = new ProductTypeParameter() 
-                //{
-                //    Parameter = SelectedParameter,
-                //    ParameterId = SelectedParameter.Id,
-                //    ProductType = SelectedProductType,
-                //    ProductTypeId = SelectedProductType.Id
-                //};
-                //ProductTypeParameterDB.GetDB().Insert(productTypeParameter);
-                SelectAll();
+                ProductTypeParameterResponse productTypeParameter = new ProductTypeParameterResponse()
+                {
+                    Parameter = SelectedParameter,
+                    ParameterId = SelectedParameter.Id,
+                    ProductType = SelectedProductType,
+                    ProductTypeId = SelectedProductType.Id
+                };
+                await apiClient.PostProductTypeParameter(productTypeParameter);
+                await Task.Run(() => SelectAll());
             }, () => SelectedParameter != null &&
             SelectedProductType != null &&
             !string.IsNullOrEmpty(SelectedProductType.Title));
 
-            EditParameter = new CommandMvvm(() =>
+            EditParameter = new CommandMvvm(async () =>
             {
-                //Parameter parameter = SelectedProductTypeParameter.Parameter;
-                //SelectedProductTypeParameter.Parameter = SelectedParameter;
-                //SelectedProductTypeParameter.ParameterId = SelectedParameter.Id;
-                //ProductTypeParameterDB.GetDB().UpdateParameter(SelectedProductTypeParameter, parameter);
-                SelectAll();
-            }, () => SelectedProductTypeParameter != null &&
+                ParameterResponse parameter = SelectedProductTypeParameter.Parameter;
+                SelectedProductTypeParameter.Parameter = SelectedParameter;
+                SelectedProductTypeParameter.ParameterId = SelectedParameter.Id;
+                await apiClient.DeleteProductTypeParameter(parameter.Id, SelectedProductTypeParameter.ProductTypeId);
+                await apiClient.PostProductTypeParameter(SelectedProductTypeParameter);
+                await Task.Run(() => SelectAll());
+            }, () =>
+            SelectedProductTypeParameter != null &&
             SelectedParameter != null &&
             SelectedProductType != null &&
             !string.IsNullOrEmpty(SelectedProductType.Title));
 
-            RemoveParameter = new CommandMvvm(() =>
+            RemoveParameter = new CommandMvvm(async () =>
             {
-                ProductTypeParameterDB.GetDB().Remove(SelectedProductTypeParameter);
-                SelectAll();
-            }, () => SelectedProductTypeParameter != null &&
+                await apiClient.DeleteProductTypeParameter(SelectedProductTypeParameter.ParameterId, SelectedProductTypeParameter.ProductTypeId);
+                await Task.Run(() => SelectAll());
+            }, () => 
+            SelectedProductTypeParameter != null &&
             SelectedProductType != null &&
             !string.IsNullOrEmpty(SelectedProductType.Title));
 
             OpenAddEditParameter = new CommandMvvm(() =>
             {
                 hide();
-                new WindowAddEditParameter().ShowDialog();
+                new WindowAddEditParameter(apiClient).ShowDialog();
                 thisWindow.ShowDialog();
-                SelectAll();
+                Task.Run(() => SelectAll());
             }, () => true);
 
         }
 
-        private void SelectAll()
+        private async void SelectAll()
         {
-            //SelectedProductType = new ProductType();
-            //ProductTypes = new ObservableCollection<ProductType>(ProductTypeDB.GetDB().SelectAll());
-            //Parameters = new ObservableCollection<Parameter>(ParameterDB.GetDB().SelectAll());
-            //ProductTypeParameters = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll());
-            //selectedProductTypeParametersOnProductType = new ObservableCollection<ProductTypeParameter>(ProductTypeParameterDB.GetDB().SelectAll());
+            SelectedProductType = new ProductTypeResponse();
+            await SelectProductTypesAsync();
+            await SelectParametersAsync();
+            await SelectProductTypeParametersAsync();
+            await SelectSelectProductTypeParametersAsync();
+        }
+        public async Task SelectProductTypesAsync()
+        {
+            var (list, error) = await apiClient.GetListProductType();
+            var listProductType = new ObservableCollection<ProductTypeResponse>(list);
+            ProductTypes = listProductType;
+        }
+        public async Task SelectParametersAsync()
+        {
+            var (list, error) = await apiClient.GetListParameter();
+            var listParameter = new ObservableCollection<ParameterResponse>(list);
+            Parameters = listParameter;
+        }
+        public async Task SelectProductTypeParametersAsync()
+        {
+            var (list, error) = await apiClient.GetListProductTypeParameter();
+            var listProductTP = new ObservableCollection<ProductTypeParameterResponse>(list);
+            for (int i = 0; i < list.Count; i++)
+            {
+                (var productType, error) = await apiClient.GetProductType(listProductTP[i].ProductTypeId);
+                var type = new ProductTypeResponse
+                {
+                    Id = productType.Id,
+                    Title = productType.Title
+                };
+                (var parameter, error) = await apiClient.GetParameter(listProductTP[i].ParameterId);
+                var param = new ParameterResponse
+                {
+                    Id = parameter.Id,
+                    Title = parameter.Title
+                };
+                listProductTP[i].ProductType = type;
+                listProductTP[i].Parameter = param;
+            }
+            ProductTypeParameters = listProductTP;
+        }
+        public async Task SelectSelectProductTypeParametersAsync()
+        {
+            var (list, error) = await apiClient.GetListProductTypeParameter();
+            var listProductTP = new ObservableCollection<ProductTypeParameterResponse>(list);
+            for (int i = 0; i < list.Count; i++)
+            {
+                (var productType, error) = await apiClient.GetProductType(listProductTP[i].ProductTypeId);
+                var type = new ProductTypeResponse
+                {
+                    Id = productType.Id,
+                    Title = productType.Title
+                };
+                (var parameter, error) = await apiClient.GetParameter(listProductTP[i].ParameterId);
+                var param = new ParameterResponse
+                {
+                    Id = parameter.Id,
+                    Title = parameter.Title
+                };
+                listProductTP[i].ProductType = type;
+                listProductTP[i].Parameter = param;
+            }
+            SelectedProductTypeParametersOnProductType = listProductTP;
+        }
+        private async void SelectPTP(ProductTypeResponse selectedPT)
+        {
+            var (list, error) = await apiClient.GetListProductTypeParameter();
+            list = [.. list.Where(s => s.ProductTypeId == selectedPT.Id)];
+            var listProductTP = new ObservableCollection<ProductTypeParameterResponse>(list);
+            for (int i = 0; i < list.Count; i++)
+            {
+                (var productType, error) = await apiClient.GetProductType(listProductTP[i].ProductTypeId);
+                var type = new ProductTypeResponse
+                {
+                    Id = productType.Id,
+                    Title = productType.Title
+                };
+                (var parameter, error) = await apiClient.GetParameter(listProductTP[i].ParameterId);
+                
+                var param = new ParameterResponse
+                {
+                    Id = parameter.Id,
+                    Title = parameter.Title
+                };
+                listProductTP[i].ProductType = type;
+                listProductTP[i].Parameter = param;
+            }
+            SelectedProductTypeParametersOnProductType = listProductTP;
         }
         Action hide;
 

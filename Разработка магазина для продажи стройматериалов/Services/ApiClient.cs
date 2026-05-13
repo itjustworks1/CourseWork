@@ -19,6 +19,7 @@ namespace Magaz_Stroitelya.Services
         {
             PropertyNameCaseInsensitive = true
         };
+        public int UserId { get; set; }
 
         public ApiClient()
         {
@@ -39,6 +40,8 @@ namespace Magaz_Stroitelya.Services
             await PostAuthJsonAsync<LoginRequest, LoginResponse>("/api/Auth/login", new LoginRequest { Login = login, Password = password });
         public async Task<(LoginResponse? Data, string? Error)> RegisterAsync(LoginRequest request) =>
             await PostAuthJsonAsync<LoginRequest, LoginResponse>("/api/Auth/register", request);
+        public async Task<(IReadOnlyCollection<UserResponse> Data, string? Error)> GetListUsers() =>
+            await GetListAsync<UserResponse>($"/api/Auth");
         public async Task<(UserResponse? Data, string? Error)> GetMe(int id) =>
             await GetAsync<UserResponse>($"/api/Auth/me/{id}");
 
@@ -47,9 +50,9 @@ namespace Magaz_Stroitelya.Services
             await GetListAsync<OrderResponse>($"/api/Order");
         public async Task<(OrderResponse? Data, string? Error)> GetOrder(int id) =>
             await GetAsync<OrderResponse>($"/api/Order/{id}");
-        public async Task<string?> PostOrder(OrderResponse request) =>
+        public async Task<string?> PostOrder(OrderRequest request) =>
             await PostJsonAsync("/api/Order", request);
-        public async Task<string?> PatchOrder(int id, OrderResponse request) =>
+        public async Task<string?> PatchOrder(int id, OrderRequest request) =>
             await PatchJsonAsync($"/api/Order/{id}", request);
         public async Task<string?> DeleteOrder(int id) =>
             await DeleteAsync($"/api/Order/{id}");
@@ -57,6 +60,12 @@ namespace Magaz_Stroitelya.Services
         //OrderStructure
         public async Task<(IReadOnlyCollection<OrderStructureResponse> Data, string? Error)> GetListOrderStructure() =>
             await GetListAsync<OrderStructureResponse>($"/api/OrderStructure");
+        public async Task<string?> PostOrderStructure(OrderStructureResponse request) =>
+            await PostJsonAsync($"/api/OrderStructure", request);
+        public async Task<string?> PatchOrderStructure(int id, OrderStructureResponse request) =>
+            await PatchJsonAsync($"/api/OrderStructure/{id}", request);
+        public async Task<string?> DeleteOrderStructure(int id) =>
+            await DeleteAsync($"/api/OrderStructure/{id}");
 
         //Parameter
         public async Task<(IReadOnlyCollection<ParameterResponse> Data, string? Error)> GetListParameter() =>
@@ -106,7 +115,13 @@ namespace Magaz_Stroitelya.Services
         public async Task<string?> DeleteProductType(int id) =>
             await DeleteAsync($"/api/ProductType/{id}");
 
-
+        //ProductTypeParameter
+        public async Task<(IReadOnlyCollection<ProductTypeParameterResponse> Data, string? Error)> GetListProductTypeParameter() =>
+            await GetListAsync<ProductTypeParameterResponse>($"/api/ProductTypeParameter");
+        public async Task<string?> PostProductTypeParameter(ProductTypeParameterResponse request) =>
+            await PostJsonAsync($"/api/ProductTypeParameter", request);
+        public async Task<string?> DeleteProductTypeParameter(int idp, int idt) =>
+            await DeleteAsync($"/api/ProductTypeParameter/{idp}/{idt}");
 
 
         //Other
