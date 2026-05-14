@@ -18,7 +18,7 @@
         </Grid.ColumnDefinitions>
         <Grid Margin="10">
             <!--<TextBox Name="tb1" Height="24" MinWidth="400" MaxWidth="500" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="20"/>-->
-            <TextBlock 
+            <!--<TextBlock 
                    Text="Поиск"
                    IsHitTestVisible="False"
                    FontSize="20"
@@ -40,7 +40,7 @@
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
-            </TextBlock>
+            </TextBlock>-->
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Grid.ColumnSpan="2">
             <Button Width="100" Command="{Binding PlaceAnOrder}" Margin="30,0" FontSize="16">

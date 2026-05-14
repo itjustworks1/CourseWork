@@ -1,16 +1,18 @@
-﻿using Magaz_Stroitelya.Services;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.View;
 using Magaz_Stroitelya.VMTools;
 
 namespace MVVM.Model.DTO.Response
 {
-    public class OrderStructureResponse
+    public partial class OrderStructureResponse : ObservableObject
     {
         public int Id { get; set; }
         public int Quantity { get; set; }
         public decimal Value { get; set; }
         public int ProductId { get; set; }
-        public ProductResponse Product { get; set; }
+        [ObservableProperty] private ProductResponse _product;
+        //public ProductResponse Product { get; set; }
         public int OrderId { get; set; }
         public OrderResponse Order { get; set; }
 

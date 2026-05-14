@@ -193,7 +193,7 @@
                 <Button Height="50" Command="{Binding AddParameter}" Margin="10" FontSize="16">
                     <TextBlock> Добавить <LineBreak/> параметр</TextBlock>
                 </Button>
-                <Button Grid.Column="1" Command="{Binding EditParameterSecondCommand}" Margin="10" FontSize="16">
+                <Button Grid.Column="1" Command="{Binding EditParameter}" Margin="10" FontSize="16">
                     <TextBlock> Редактировать <LineBreak/> параметр</TextBlock>
                 </Button>
                 <Button Grid.Column="2" Command="{Binding RemoveParameter}" Margin="10" FontSize="16">
@@ -207,7 +207,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="Открыть окно управления параметрами" Command="{Binding OpenAddEditProductType}" Margin="10" FontSize="16"/>
+            <Button Content="Открыть окно управление типами продуктов" Command="{Binding OpenAddEditProductType}" Margin="10" FontSize="16"/>
             <ListView ItemsSource="{Binding SelectedSelectedProductParameters}" SelectedItem="{Binding SelectedProductParameter}" Margin="10" FontSize="16" Grid.Row="1">
                 <ListView.View>
                     <GridView>

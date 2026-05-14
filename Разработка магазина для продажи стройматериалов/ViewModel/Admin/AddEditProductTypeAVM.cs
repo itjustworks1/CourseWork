@@ -181,26 +181,27 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         }
         public async Task SelectSelectProductTypeParametersAsync()
         {
-            var (list, error) = await apiClient.GetListProductTypeParameter();
-            var listProductTP = new ObservableCollection<ProductTypeParameterResponse>(list);
-            for (int i = 0; i < list.Count; i++)
-            {
-                (var productType, error) = await apiClient.GetProductType(listProductTP[i].ProductTypeId);
-                var type = new ProductTypeResponse
-                {
-                    Id = productType.Id,
-                    Title = productType.Title
-                };
-                (var parameter, error) = await apiClient.GetParameter(listProductTP[i].ParameterId);
-                var param = new ParameterResponse
-                {
-                    Id = parameter.Id,
-                    Title = parameter.Title
-                };
-                listProductTP[i].ProductType = type;
-                listProductTP[i].Parameter = param;
-            }
-            SelectedProductTypeParametersOnProductType = listProductTP;
+            //var (list, error) = await apiClient.GetListProductTypeParameter();
+            //var listProductTP = new ObservableCollection<ProductTypeParameterResponse>(list);
+            //for (int i = 0; i < list.Count; i++)
+            //{
+            //    (var productType, error) = await apiClient.GetProductType(listProductTP[i].ProductTypeId);
+            //    var type = new ProductTypeResponse
+            //    {
+            //        Id = productType.Id,
+            //        Title = productType.Title
+            //    };
+            //    (var parameter, error) = await apiClient.GetParameter(listProductTP[i].ParameterId);
+            //    var param = new ParameterResponse
+            //    {
+            //        Id = parameter.Id,
+            //        Title = parameter.Title
+            //    };
+            //    listProductTP[i].ProductType = type;
+            //    listProductTP[i].Parameter = param;
+            //}
+            //SelectedProductTypeParametersOnProductType = listProductTP;
+            SelectedProductTypeParametersOnProductType = new ObservableCollection<ProductTypeParameterResponse>();
         }
         private async void SelectPTP(ProductTypeResponse selectedPT)
         {

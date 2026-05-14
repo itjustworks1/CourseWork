@@ -5,10 +5,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Magaz_Stroitelya.VMTools
 {
-    public class BaseVM : INotifyPropertyChanged
+    public class BaseVM : ObservableObject, INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

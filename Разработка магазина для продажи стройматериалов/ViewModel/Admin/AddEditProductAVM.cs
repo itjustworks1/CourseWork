@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Magaz_Stroitelya.Services;
 using Magaz_Stroitelya.View;
 using Magaz_Stroitelya.VMTools;
@@ -38,7 +39,7 @@ namespace Magaz_Stroitelya.ViewModel.Admin
             set 
             { 
                 selectedProductParameter = value;
-                Signal();
+                OnPropertyChanged();
                 if (value is null)
                 {
                     EditProductParameter = null;
@@ -61,14 +62,16 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         public ObservableCollection<ProductParameterResponse> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
         public ObservableCollection<ProductTypeResponse> ProductTypes { get => productTypes; 
             set 
-            { 
-                productTypes = value; 
+            {
+                var id = SelectedProduct.ProductTypeId;
+                productTypes = value;
+                SelectedProduct.ProductType = productTypes.FirstOrDefault(s => s.Id == id);
+                SelectedProduct.ProductTypeId = id;
                 Signal();
             } 
         }
         public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
-        public ProductResponse SelectedProduct { get => selectedProduct; 
-            set { selectedProduct = value; Signal(); } }
+        [ObservableProperty] private ProductResponse _selectedProduct;
 
         public CommandMvvm Save { get; set; }
         public CommandMvvm Cancel { get; set; }
@@ -114,17 +117,18 @@ namespace Magaz_Stroitelya.ViewModel.Admin
             );
             EditParameter = new CommandMvvm(() =>
             {
-
                 SelectedProductParameter.ChangeAllProperties(EditProductParameter);
-                //if(SelectedProductParameter.Id == EditProductParameter.Id)
-                //    for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
-                //        if (SelectedSelectedProductParameters[i].Id == EditProductParameter.Id)
-                //            SelectedSelectedProductParameters[i] = EditProductParameter;
+                for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
+                    if (SelectedSelectedProductParameters[i].Id == SelectedProductParameter.Id)
+                        SelectedSelectedProductParameters[i] = SelectedProductParameter;
                 Task.Run(() => SelectAll());
             }, () =>
             SelectedProductParameter != null &&
             SelectedProductParameter.Parameter != null &&
-            !string.IsNullOrEmpty(SelectedProductParameter.Meaning)
+            !string.IsNullOrEmpty(SelectedProductParameter.Meaning) &&
+            EditProductParameter != null &&
+            EditProductParameter.Parameter != null &&
+            !string.IsNullOrEmpty(EditProductParameter.Meaning)
             );
 
             RemoveParameter = new CommandMvvm(() =>
@@ -247,22 +251,21 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         {
             var (list, error) = await apiClient.GetListProductType();
             var listProduct = new ObservableCollection<ProductTypeResponse>(list);
-            var productTypeId = SelectedProduct.ProductType.Id;
-            ProductTypes = listProduct;
-
-            var prodType = ProductTypes.FirstOrDefault(t => t.Id == productTypeId);
-            if (prodType is not null)
+            int productTypeId = 0;
+            if (SelectedProduct.ProductType != null)
             {
-                SelectedProduct.ProductType = prodType;
-                SelectedProduct.ProductTypeId = productTypeId;
+                productTypeId = SelectedProduct.ProductType.Id;
             }
-            
-            //MessageBox.Show($"{SelectedProduct.ProductType == null}");
-            //MessageBox.Show($"{SelectedProduct.ProductType == null}");
-            //MessageBox.Show($"{SelectedProduct.ProductType == null}");
-            //Thread.Sleep(20); //(╯°□°）╯︵ ┻━━━━━━━━━━━━━━┻
-            //SelectedProduct.ProductType = prodType;
-            //SelectedProduct.ProductTypeId = prodType.Id;
+            ProductTypes = listProduct;
+            if (SelectedProduct.ProductType != null)
+            {
+                var prodType = ProductTypes.FirstOrDefault(t => t.Id == productTypeId);
+                if (prodType is not null)
+                {
+                    SelectedProduct.ProductType = prodType;
+                    SelectedProduct.ProductTypeId = productTypeId;
+                }
+            }
         }
         public async Task SelectProductParametersAsync()
         {

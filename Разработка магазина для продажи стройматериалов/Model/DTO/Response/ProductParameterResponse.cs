@@ -1,14 +1,16 @@
-﻿using Magaz_Stroitelya.ViewModel.Admin;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Magaz_Stroitelya.ViewModel.Admin;
 using Magaz_Stroitelya.VMTools;
 
 namespace MVVM.Model.DTO.Response
 {
-    public class ProductParameterResponse
+    public partial class ProductParameterResponse : ObservableObject
     {
         public int Id { get; set; }
-        public string Meaning { get; set; } = null!;
+        [ObservableProperty] private string _meaning = null!;
+        //public string Meaning { get; set; } = null!;
         public int ParameterId { get; set; }
-        public ParameterResponse Parameter { get; set; }
+        [ObservableProperty] private ParameterResponse _parameter;
         public int ProductId { get; set; }
         public ProductResponse Product { get; set; }
 

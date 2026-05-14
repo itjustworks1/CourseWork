@@ -1,6 +1,8 @@
-﻿namespace MVVM.Model.DTO.Response
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace MVVM.Model.DTO.Response
 {
-    public class ParameterResponse
+    public class ParameterResponse : ObservableObject
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;

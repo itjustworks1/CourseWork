@@ -1,4 +1,5 @@
-﻿using Magaz_Stroitelya.Services;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Magaz_Stroitelya.Services;
 //using Magaz_Stroitelya.DB;
 //using Magaz_Stroitelya.Model;
 using Magaz_Stroitelya.View;
@@ -15,7 +16,7 @@ using System.Windows.Controls;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
-    public class CartVM : BaseVM
+    public partial class CartVM : BaseVM
     {
         private ApiClient apiClient;
         private Window thisWindow;
@@ -26,7 +27,8 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         private ObservableCollection<ProductResponse> products = new();
         private string search;
 
-        public ObservableCollection<OrderStructureResponse> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
+        [ObservableProperty] private ObservableCollection<OrderStructureResponse> _orderStructures;
+        //public ObservableCollection<OrderStructureResponse> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
         public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; Signal(); } }
         public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
         public OrderStructureResponse SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; Signal(); } }
@@ -54,7 +56,7 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
                     Status = order.Status,
                     UserId = order.UserId,
                 });
-                NewOrder();
+                //NewOrder();
                 await Task.Run(() => SelectAll());
             }, () => OrderStructures != null && OrderStructures.Count != 0);
 
@@ -75,8 +77,8 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             {
                 hide();
                 new WindowProduct(SelectedOrderStructure.Product, apiClient).ShowDialog();
-                Task.Run(() => SelectAll());
                 thisWindow.ShowDialog();
+                Task.Run(() => SelectAll());
             }, () => SelectedOrderStructure != null);
         }
 
@@ -114,7 +116,8 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
                 listOrderStructure[i].Product = prod;
                 listOrderStructure[i].Order = ord;
             }
-            OrderStructures = [.. listOrderStructure.Where(s => s.Order.Status == false).OrderByDescending(t => t.Product.Title)];
+            OrderStructures = [.. listOrderStructure.Where(s => s.Order.Status == false && s.Order.UserId == apiClient.UserId).OrderByDescending(t => t.Product.Title)];
+            OnPropertyChanged(nameof(OrderStructures));
 
         }
         public async Task SelectProductsAsync()
@@ -138,7 +141,7 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
             var (list, error) = await apiClient.GetListOrder();
             var listOrder = new ObservableCollection<OrderResponse>(list.Where(s => s.UserId == apiClient.UserId));
             Orders = listOrder;
-            if (Orders.FirstOrDefault(s => s.Status == false && s.UserId == apiClient.UserId) == null)
+            if (Orders.FirstOrDefault(s => s.Status == false) == null)
             {
                 NewOrder();
             }
