@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
+using MVVM.Services;
+using MVVM.View.NoAdmin;
+using MVVM.VMTools;
 
 namespace MVVM.Model.DTO.Response
 {

@@ -1,14 +1,9 @@
-﻿using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
-using MVVM.Model.DTO.Response;
-using System;
-using System.Collections.Generic;
+﻿using MVVM.Model.DTO.Response;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using MVVM.Services;
+using MVVM.View.Admin;
+using MVVM.VMTools;
 
 namespace MVVM.ViewModel.Admin
 {

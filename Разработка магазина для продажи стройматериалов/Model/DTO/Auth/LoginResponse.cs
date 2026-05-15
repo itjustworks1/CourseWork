@@ -1,4 +1,4 @@
-﻿namespace Magaz_Stroitelya.DTO.Auth
+﻿namespace MVVM.Model.DTO.Auth
 {
     public class LoginResponse
     {        

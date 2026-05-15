@@ -1,8 +1,6 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
-namespace Magaz_Stroitelya
+namespace MVVM
 {
     /// <summary>
     /// Interaction logic for App.xaml

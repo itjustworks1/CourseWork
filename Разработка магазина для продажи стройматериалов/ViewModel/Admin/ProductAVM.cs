@@ -1,16 +1,11 @@
-﻿using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using MVVM.Model.DTO.Response;
+using MVVM.Services;
+using MVVM.View.Admin;
+using MVVM.VMTools;
 
-namespace Magaz_Stroitelya.ViewModel.NoAdmin
+namespace MVVM.ViewModel.Admin
 {
     public class ProductAVM : BaseVM
     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace API.NewDB;
+﻿namespace API.NewDB;
 
 public partial class Product
 {

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Magaz_Stroitelya.DTO.Auth;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
+﻿using System.Windows;
+using MVVM.Model.DTO.Auth;
+using MVVM.Services;
+using MVVM.View.Admin;
+using MVVM.View.NoAdmin;
+using MVVM.VMTools;
 
-namespace Magaz_Stroitelya.ViewModel
+namespace MVVM.ViewModel
 {
     public class RegisterVM : BaseVM
     {

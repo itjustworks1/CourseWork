@@ -1,6 +1,4 @@
-﻿using API.DTO.Raquests;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using API.DTO.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.NewDB;

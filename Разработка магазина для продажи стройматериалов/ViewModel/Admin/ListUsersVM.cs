@@ -1,17 +1,9 @@
-﻿using Magaz_Stroitelya.DTO.Auth;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
-using MVVM.Model.DTO.Response;
-using MVVM.View.Admin;
-using System;
-using System.Collections.Generic;
+﻿using MVVM.View.Admin;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
+using MVVM.Model.DTO.Auth;
+using MVVM.Services;
+using MVVM.VMTools;
 
 namespace MVVM.ViewModel.Admin
 {

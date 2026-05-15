@@ -1,19 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
-using MVVM.Model.DTO.Response;
-using MVVM.VMTools;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MVVM.Model.DTO.Requests;
+using MVVM.Model.DTO.Response;
+using MVVM.Services;
+using MVVM.View.Admin;
+using MVVM.VMTools;
 
-namespace Magaz_Stroitelya.ViewModel.Admin
+namespace MVVM.ViewModel.Admin
 {
     public partial class AddEditProductAVM : BaseVM
     {

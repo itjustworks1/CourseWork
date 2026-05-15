@@ -1,5 +1,4 @@
 ﻿using API.DTO.Auth;
-using System.Security.Claims;
 using API.NewDB;
 
 namespace API.Servise.Auth

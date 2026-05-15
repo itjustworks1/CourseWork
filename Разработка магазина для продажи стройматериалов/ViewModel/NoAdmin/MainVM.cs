@@ -1,18 +1,13 @@
 ﻿//using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.VMTools;
-using MVVM.Model.DTO.Response;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
 
-namespace Magaz_Stroitelya.ViewModel.NoAdmin
+using System.Collections.ObjectModel;
+using System.Windows;
+using MVVM.Model.DTO.Response;
+using MVVM.Services;
+using MVVM.View.NoAdmin;
+using MVVM.VMTools;
+
+namespace MVVM.ViewModel.NoAdmin
 {
     /* Список задач
      * Сделать [редактирование заказов (наверное серез корзину)]. + список заказов + состав заказов // я хз что написано

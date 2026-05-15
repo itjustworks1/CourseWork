@@ -1,4 +1,4 @@
-﻿namespace MVVM.Model.DTO.Response
+﻿namespace MVVM.Model.DTO.Requests
 {
     public class OrderRequest
     {

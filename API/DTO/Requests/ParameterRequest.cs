@@ -1,4 +1,4 @@
-﻿namespace API.DTO.Raquests
+﻿namespace API.DTO.Requests
 {
     public class ParameterRequest
     {

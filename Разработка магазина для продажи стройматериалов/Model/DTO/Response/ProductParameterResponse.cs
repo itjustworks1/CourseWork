@@ -1,6 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Magaz_Stroitelya.ViewModel.Admin;
-using Magaz_Stroitelya.VMTools;
 
 namespace MVVM.Model.DTO.Response
 {

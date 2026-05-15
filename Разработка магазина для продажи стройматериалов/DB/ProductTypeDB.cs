@@ -1,14 +1,8 @@
-﻿using MySqlConnector;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using Magaz_Stroitelya.Model;
+﻿using System.Windows;
+using MVVM.Model;
+using MySqlConnector;
 
-namespace Magaz_Stroitelya.DB
+namespace MVVM.DB
 {
     class ProductTypeDB
     {

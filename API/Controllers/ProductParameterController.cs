@@ -1,7 +1,5 @@
-﻿using API.DTO.Raquests;
-using API.DTO.Requests;
+﻿using API.DTO.Requests;
 using API.NewDB;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

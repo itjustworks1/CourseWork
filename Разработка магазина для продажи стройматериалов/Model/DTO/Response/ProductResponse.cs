@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Magaz_Stroitelya.View;
-using Magaz_Stroitelya.ViewModel.Admin;
-using Magaz_Stroitelya.VMTools;
+using MVVM.Services;
+using MVVM.View.NoAdmin;
+using MVVM.VMTools;
 
 namespace MVVM.Model.DTO.Response
 {
@@ -23,7 +23,7 @@ namespace MVVM.Model.DTO.Response
         {
             AddToCart = new CommandMvvm(() =>
             {
-                new WindowAddToCart(this, new Magaz_Stroitelya.Services.ApiClient()).ShowDialog();
+                new WindowAddToCart(this, new ApiClient()).ShowDialog();
             }, () => this != null);
         }
 

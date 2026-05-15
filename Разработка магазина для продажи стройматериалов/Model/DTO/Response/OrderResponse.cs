@@ -1,7 +1,8 @@
-﻿using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.VMTools;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
+using MVVM.Model.DTO.Requests;
+using MVVM.Services;
+using MVVM.VMTools;
 
 namespace MVVM.Model.DTO.Response
 {

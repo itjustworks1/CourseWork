@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Magaz_Stroitelya.DTO.Auth;
+using MVVM.Model.DTO.Auth;
+using MVVM.Model.DTO.Requests;
 using MVVM.Model.DTO.Response;
 
-namespace Magaz_Stroitelya.Services
+namespace MVVM.Services
 {
     public class ApiClient
     {

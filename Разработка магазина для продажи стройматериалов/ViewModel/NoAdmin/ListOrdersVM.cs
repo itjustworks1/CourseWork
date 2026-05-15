@@ -1,14 +1,15 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using Magaz_Stroitelya.Services;
-//using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.View;
-//using Magaz_Stroitelya.DB;
-using Magaz_Stroitelya.VMTools;
-using MVVM.Model.DTO.Response;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.Input;
+using MVVM.Model.DTO.Requests;
+using MVVM.Model.DTO.Response;
+using MVVM.Services;
+using MVVM.View.NoAdmin;
+using MVVM.VMTools;
+//using Magaz_Stroitelya.Model;
+//using Magaz_Stroitelya.DB;
 
-namespace Magaz_Stroitelya.ViewModel.NoAdmin
+namespace MVVM.ViewModel.NoAdmin
 {
     public partial class ListOrdersVM : BaseVM
     {

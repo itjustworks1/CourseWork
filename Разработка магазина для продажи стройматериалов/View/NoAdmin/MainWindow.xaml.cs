@@ -1,19 +1,8 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.Services;
-using Magaz_Stroitelya.ViewModel;
-using Magaz_Stroitelya.ViewModel.NoAdmin;
+﻿using System.Windows;
+using MVVM.Services;
+using MVVM.ViewModel.NoAdmin;
 
-namespace Magaz_Stroitelya.View
+namespace MVVM.View.NoAdmin
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

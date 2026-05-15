@@ -1,18 +1,12 @@
-﻿using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.Services;
+﻿using System.Collections.ObjectModel;
+using MVVM.Model.DTO.Requests;
+using MVVM.Model.DTO.Response;
+using MVVM.Services;
+using MVVM.VMTools;
 //using Magaz_Stroitelya.DB;
 //using Magaz_Stroitelya.Model;
-using Magaz_Stroitelya.VMTools;
-using MVVM.Model.DTO.Response;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
-namespace Magaz_Stroitelya.ViewModel.NoAdmin
+namespace MVVM.ViewModel.NoAdmin
 {
     public class AddToCartVM : BaseVM
     {

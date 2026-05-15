@@ -1,7 +1,5 @@
 ﻿using API.DTO.Requests;
 using API.NewDB;
-using Magaz_Stroitelya.Model;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
