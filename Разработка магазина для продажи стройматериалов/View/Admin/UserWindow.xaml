@@ -27,7 +27,7 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="340"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding Date}" VerticalAlignment="Center" FontSize="20">
+                                        <TextBlock Text="{Binding Date, StringFormat='hh:mm dd.MM.yyyy'}" VerticalAlignment="Center" FontSize="20">
                                             <TextBlock.InputBindings>
                                                 <MouseBinding MouseAction="LeftDoubleClick"
                                   Command="{Binding DataContext.OpenOrder, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>

@@ -19,7 +19,6 @@ namespace MVVM.ViewModel.Admin
 
         public OrderStructureResponse OrderStructure { get => orderStructure; set { orderStructure = value; OnPropertyChanged(); } }
         public ObservableCollection<ProductParameterResponse> ProductParameters { get => productParameters; set { productParameters = value; OnPropertyChanged(); } }
-        //public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
         public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; OnPropertyChanged(); } }
 
         public CommandMvvm AddToCart { get; set; }
@@ -40,7 +39,7 @@ namespace MVVM.ViewModel.Admin
             //    Task.Run(() => SelectAll());
             //}, () => SelectedProduct != null);
 
-            EditProduct = new CommandMvvm(async () =>
+            EditProduct = new CommandMvvm(() =>
             {
                 ProductResponse product1 = new ProductResponse()
                 {
@@ -59,11 +58,11 @@ namespace MVVM.ViewModel.Admin
                 thisWindow.ShowDialog();
             }, () => true);
             //
-            RemoveProduct = new CommandMvvm(() =>
-            {
-                //new WindowRemoveProduct(SelectedProduct).ShowDialog();
-                Task.Run(() => SelectAll());
-            }, () => SelectedProduct != null);
+            //RemoveProduct = new CommandMvvm(() =>
+            //{
+            //    //new WindowRemoveProduct(SelectedProduct).ShowDialog();
+            //    Task.Run(() => SelectAll());
+            //}, () => SelectedProduct != null);
             
             //OpenCart = new CommandMvvm(() =>
             //{

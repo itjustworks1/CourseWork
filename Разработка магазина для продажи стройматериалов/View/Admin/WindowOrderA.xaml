@@ -54,7 +54,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel VerticalAlignment="Top" Grid.Column="2">
-            <TextBlock HorizontalAlignment="Right" Text="{Binding SelectedOrder.Date}" Margin="10" FontSize="20"/>
+            <TextBlock HorizontalAlignment="Right" Text="{Binding SelectedOrder.Date, StringFormat='hh:mm dd.MM.yyyy'}" Margin="10" FontSize="20"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Text="{Binding Value}" Margin="10" FontSize="20"/>
                 <TextBlock Text="руб" Margin="10" FontSize="20"/>

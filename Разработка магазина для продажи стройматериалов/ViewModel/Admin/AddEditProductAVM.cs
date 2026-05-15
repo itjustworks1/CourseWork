@@ -108,13 +108,14 @@ namespace MVVM.ViewModel.Admin
             }, () =>
             EditProductParameter != null &&
             EditProductParameter.Parameter != null &&
-            !string.IsNullOrEmpty(EditProductParameter.Meaning)
+            !string.IsNullOrEmpty(EditProductParameter.Meaning) &&
+            !SelectedSelectedProductParameters.Select(s => s.ParameterId).Contains(EditProductParameter.Parameter.Id)
             );
             EditParameter = new CommandMvvm(() =>
             {
                 SelectedProductParameter.ChangeAllProperties(EditProductParameter);
                 for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
-                    if (SelectedSelectedProductParameters[i].Id == SelectedProductParameter.Id)
+                    if (SelectedSelectedProductParameters[i].ParameterId == SelectedProductParameter.ParameterId)
                     {
                         SelectedSelectedProductParameters[i] = SelectedProductParameter;
                         break;
@@ -126,7 +127,8 @@ namespace MVVM.ViewModel.Admin
             !string.IsNullOrEmpty(SelectedProductParameter.Meaning) &&
             EditProductParameter != null &&
             EditProductParameter.Parameter != null &&
-            !string.IsNullOrEmpty(EditProductParameter.Meaning)
+            !string.IsNullOrEmpty(EditProductParameter.Meaning) &&
+            (!SelectedSelectedProductParameters.Select(s => s.ParameterId).Contains(EditProductParameter.Parameter.Id) || SelectedProductParameter.Parameter.Id == EditProductParameter.Parameter.Id)
             );
 
             RemoveParameter = new CommandMvvm(() =>

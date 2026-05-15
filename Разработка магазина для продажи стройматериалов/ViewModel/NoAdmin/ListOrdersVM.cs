@@ -35,8 +35,15 @@ namespace MVVM.ViewModel.NoAdmin
             {
                 var (listOrder, error) = await apiClient.GetListOrder();
                 (var listOrderStructure, error) = await apiClient.GetListOrderStructure();
+                (var listProduct, error) = await apiClient.GetListProduct();
                 var rOrder = new ObservableCollection<OrderResponse>(listOrder).FirstOrDefault(s => s.Status == false && s.UserId == apiClient.UserId);
                 var rOrderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure.Where(s => s.OrderId == rOrder.Id));
+                var rProducts = new ObservableCollection<ProductResponse>(listProduct);
+                var pOrderStructure = new ObservableCollection<OrderStructureResponse>( rOrderStructures.Where(s => rProducts.Select(s => s.Id).Contains(s.ProductId)));
+                foreach (var structure in pOrderStructure)
+                {
+                    rProducts.FirstOrDefault(s => s.Id == structure.ProductId).Quantity = structure.Product.Quantity;
+                }
                 foreach (var o in rOrderStructures)
                     await apiClient.DeleteOrderStructure(o.Id);
                 await apiClient.DeleteOrder(rOrder.Id);
