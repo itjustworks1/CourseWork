@@ -94,8 +94,8 @@
                                 <Border BorderThickness="1" BorderBrush="Black">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="390"/>
-                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="290"/>
+                                            <ColumnDefinition Width="200"/>
                                             <ColumnDefinition Width="60"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="20">

@@ -95,7 +95,7 @@ namespace MVVM.ViewModel.NoAdmin
 
             (var listOrder, error) = await apiClient.GetListOrder();
             ObservableCollection<OrderResponse> orders = new ObservableCollection<OrderResponse>(listOrder);
-            OrderResponse order = orders.FirstOrDefault(s => s.Status == false);
+            OrderResponse order = orders.FirstOrDefault(s => s.Status == false && s.UserId == apiClient.UserId);
 
             (var listOrderStructure, error) = await apiClient.GetListOrderStructure();
             ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure.Where(s => s.OrderId == order.Id));
@@ -158,7 +158,7 @@ namespace MVVM.ViewModel.NoAdmin
         {
             var (list, error) = await apiClient.GetListOrder();
             ObservableCollection<OrderResponse> orders = new ObservableCollection<OrderResponse>(list);
-            OrderResponse order = orders.FirstOrDefault(s => s.Status == false);
+            OrderResponse order = orders.FirstOrDefault(s => s.Status == false && s.UserId == apiClient.UserId);
 
             (var listOrderStructure, error) = await apiClient.GetListOrderStructure();
             ObservableCollection<OrderStructureResponse> orderStructures = new ObservableCollection<OrderStructureResponse>(listOrderStructure.Where(s => s.OrderId == order.Id));

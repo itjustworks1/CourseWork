@@ -17,15 +17,15 @@ namespace MVVM.Model.DTO.Response
         public int ProductTypeId { get; set; }
         [ObservableProperty] private ProductTypeResponse _productType;
 
-        public CommandMvvm AddToCart { get; set; }
+        //public CommandMvvm AddToCart { get; set; }
 
-        public ProductResponse()
-        {
-            AddToCart = new CommandMvvm(() =>
-            {
-                new WindowAddToCart(this, new ApiClient()).ShowDialog();
-            }, () => this != null);
-        }
+        //public ProductResponse()
+        //{
+        //    AddToCart = new CommandMvvm(() =>
+        //    {
+        //        new WindowAddToCart(this, new ApiClient()).ShowDialog();
+        //    }, () => this != null);
+        //}
 
         //public static implicit operator ProductVM(ProductResponse obj)
         //{

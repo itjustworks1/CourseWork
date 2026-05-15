@@ -39,7 +39,6 @@ namespace MVVM.ViewModel.NoAdmin
         {
             hide();
             new WindowListOrders(apiClient).ShowDialog();
-            Thread.Sleep(2000);
             Task.Run(() => SelectAll());
             thisWindow.ShowDialog();
         }
@@ -47,11 +46,8 @@ namespace MVVM.ViewModel.NoAdmin
         [RelayCommand]
         private async Task RemoveFromCart2(OrderStructureResponse orderStructure)
         {
-            hide();
             new WindowRemoveFromCart(orderStructure, apiClient).ShowDialog();
-            Thread.Sleep(2000);
             Task.Run(() => SelectAll());
-            thisWindow.ShowDialog();
         }
 
         public CartVM(Window thisWindow, ApiClient apiClient)
@@ -62,7 +58,7 @@ namespace MVVM.ViewModel.NoAdmin
             Task.Run(() => SelectAll());
             PlaceAnOrder = new CommandMvvm(async () =>
             {
-                OrderResponse order = Orders.FirstOrDefault(s => s.Status == false);
+                OrderResponse order = Orders.FirstOrDefault(s => s.Status == false && s.UserId == apiClient.UserId);
                 order.Status = true;
                 order.Date = DateTime.Now;
                 await apiClient.PatchOrder(order.Id, new OrderRequest
@@ -156,7 +152,7 @@ namespace MVVM.ViewModel.NoAdmin
             var (list, error) = await apiClient.GetListOrder();
             var listOrder = new ObservableCollection<OrderResponse>(list.Where(s => s.UserId == apiClient.UserId));
             Orders = listOrder;
-            if (Orders.FirstOrDefault(s => s.Status == false) == null)
+            if (Orders.FirstOrDefault(s => s.Status == false && s.UserId == apiClient.UserId) == null)
             {
                 NewOrder();
             }

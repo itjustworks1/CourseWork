@@ -12,7 +12,7 @@ namespace MVVM.View
         public RegisterWindow(Window window)
         {
             InitializeComponent();
-            var vm = new RegisterVM(this, new ApiClient(), window);
+            var vm = new RegisterVM(this, new ApiClient(), window, PBox, PBox2);
             DataContext = vm;
             vm.SetHide(Hide);
             vm.SetClose(Close);

@@ -27,7 +27,7 @@ namespace MVVM.ViewModel.NoAdmin
 
                 var (list, error) = await apiClient.GetListOrderStructure();
                 (var listOrder, error) = await apiClient.GetListOrder();
-                var orderStructure = list.FirstOrDefault(s => s.ProductId == product.Id && listOrder.FirstOrDefault(ss => ss.Id == s.OrderId).Status == false);
+                var orderStructure = list.FirstOrDefault(s => s.ProductId == product.Id && listOrder.FirstOrDefault(ss => ss.Id == s.OrderId && ss.UserId == apiClient.UserId) != null && listOrder.FirstOrDefault(ss => ss.Id == s.OrderId && ss.UserId == apiClient.UserId).Status == false);
                 if (orderStructure == null)
                 {
                     orderStructure = new OrderStructureResponse()
@@ -38,9 +38,9 @@ namespace MVVM.ViewModel.NoAdmin
                         ProductId = product.Id
                     };
                     (var Orders, error) = await apiClient.GetListOrder();
-                    OrderResponse order = Orders.FirstOrDefault(d => d.Status == false);
+                    OrderResponse order = Orders.FirstOrDefault(d => d.Status == false && d.UserId == apiClient.UserId);
                     orderStructure.Order = order;
-                    orderStructure.OrderId = order.Id;//кoрзины нет
+                    orderStructure.OrderId = order.Id;
                 }
                 else
                     orderStructure.Quantity += Quantity;

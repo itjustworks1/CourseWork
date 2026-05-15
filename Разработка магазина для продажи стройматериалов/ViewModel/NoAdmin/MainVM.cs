@@ -1,32 +1,16 @@
 ﻿//using Magaz_Stroitelya.Model;
 
-using System.Collections.ObjectModel;
-using System.Windows;
+using CommunityToolkit.Mvvm.Input;
 using MVVM.Model.DTO.Response;
 using MVVM.Services;
 using MVVM.View.NoAdmin;
 using MVVM.VMTools;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace MVVM.ViewModel.NoAdmin
 {
-    /* Список задач
-     * Сделать [редактирование заказов (наверное серез корзину)]. + список заказов + состав заказов // я хз что написано
-     * Настроить все Remove (особенно Product ?) (кроме WindowListOrders + ...) 
-           // стоит ли мне вообще удалять Parameter и ProductType?; думаю можно удалять но при условии что их нигде нет; но тогда придеться страдать с проверками
-     * Что-то сделать с поиском ?
-     * Разобраться с ценами в заказе // я хз, вроде сделал
-     * В WindowProduct [не меняется TextBlock] + [доделать вывод инфы] + хотелось бы чуть исправить изменения
-     * В WindowAddEditProduct [сломался Parameter] + хотелось что бы ComboBox менялся от выбранных параметров;
-           теперь просто не добавляется параметр + почему всё сразу меняется + [при удалении параметра накричали]
-           // всё из-за сложности совместить ProductParameter с Parameter
-     * В WindowAddEditProductType доделать список Parameter + настроить связи
-     */
-    /* Готово
-     *  [визуал в 3 мелких окнах]
-     * [В WindowListOrders сделать отдельно для карзины(false)].
-     * [Исправить кнопку добавление/удаления товара в/из корзину/ы, редактирование Order].
-     */
-    public class MainVM : BaseVM
+    public partial class MainVM : BaseVM
     {
         private ApiClient apiClient;
         private Window thisWindow;
@@ -47,6 +31,12 @@ namespace MVVM.ViewModel.NoAdmin
         public CommandMvvm OpenCart { get; set; }
         public CommandMvvm OpenProduct { get; set; }
         public CommandMvvm ApplyFilters { get; set; }
+
+        [RelayCommand]
+        private void AddToCart2(ProductResponse product)
+        {
+            new WindowAddToCart(product, apiClient).ShowDialog();
+        }
 
         public MainVM(MainWindow thisWindow, ApiClient apiClient)
         {

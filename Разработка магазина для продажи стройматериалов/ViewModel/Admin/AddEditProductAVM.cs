@@ -115,7 +115,10 @@ namespace MVVM.ViewModel.Admin
                 SelectedProductParameter.ChangeAllProperties(EditProductParameter);
                 for (int i = 0; i < SelectedSelectedProductParameters.Count; i++)
                     if (SelectedSelectedProductParameters[i].Id == SelectedProductParameter.Id)
+                    {
                         SelectedSelectedProductParameters[i] = SelectedProductParameter;
+                        break;
+                    }
                 Task.Run(() => SelectAll());
             }, () =>
             SelectedProductParameter != null &&

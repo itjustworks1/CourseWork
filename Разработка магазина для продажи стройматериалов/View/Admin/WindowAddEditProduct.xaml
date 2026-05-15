@@ -38,7 +38,7 @@
                     </Style>
                 </TextBlock.Style>-->
             </TextBlock>
-            <TextBox Name="tb1" Text="{Binding SelectedProduct.Title}" Margin="10,0" FontSize="16"/>
+            <TextBox Name="tb1" Text="{Binding SelectedProduct.Title, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="16"/>
             <TextBlock 
                    Text="Цена"
                    IsHitTestVisible="False"
@@ -62,7 +62,7 @@
                     </Style>
                 </TextBlock.Style>-->
             </TextBlock>
-            <TextBox Name="tb" Text="{Binding SelectedProduct.Value}" Margin="10,0" FontSize="16"/>
+            <TextBox Name="tb" Text="{Binding SelectedProduct.Value, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="16"/>
             <TextBlock 
                    Text="Количество"
                    IsHitTestVisible="False"
@@ -86,7 +86,7 @@
                     </Style>
                 </TextBlock.Style>-->
             </TextBlock>
-            <TextBox Name="tb2" Text="{Binding SelectedProduct.Quantity}" Margin="10,0" FontSize="16"/>
+            <TextBox Name="tb2" Text="{Binding SelectedProduct.Quantity, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="16"/>
             <Grid Margin="10">
                 <ComboBox Name="cb2" ItemsSource="{Binding ProductTypes}" SelectedItem="{Binding SelectedProduct.ProductType}" FontSize="16">
                     <ComboBox.ItemTemplate>
@@ -157,7 +157,7 @@
                     </TextBlock>
                 </Grid>
                 <Grid Margin="10" Grid.Column="1">
-                    <TextBox Name="tb12" Text="{Binding EditProductParameter.Meaning}" FontSize="16"/>
+                    <TextBox Name="tb12" Text="{Binding EditProductParameter.Meaning, UpdateSourceTrigger=PropertyChanged}"  FontSize="16"/>
                     <TextBlock 
                    Text="Значение параметра"
                    IsHitTestVisible="False"

@@ -10,9 +10,9 @@
             <TextBlock Text="Логин" FontSize="16"/>
             <TextBox Text="{Binding Login}" Margin="0,10" FontSize="16"/>
             <TextBlock Text="Пароль" FontSize="16"/>
-            <TextBox Text="{Binding Password}" Margin="0,10" FontSize="16"/>
+            <PasswordBox Name="PBox" Margin="0,10" FontSize="16"/>
             <TextBlock Text="Повторить пароль" FontSize="16"/>
-            <TextBox Text="{Binding PasswordTwo}" Margin="0,10" FontSize="16"/>
+            <PasswordBox Name="PBox2" Margin="0,10" FontSize="16"/>
             <TextBlock Text="{Binding Error}" FontSize="13" TextAlignment="Center" Foreground="Red" TextWrapping="Wrap"/>
             <Button Content="Зарегистрироваться" Command="{Binding RegisterCommand}" Margin="0,10" FontSize="16"/>
         </StackPanel>

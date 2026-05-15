@@ -44,6 +44,7 @@ namespace MVVM.ViewModel
             {
                 Error = $"{error}";
                 isLogin = false;
+                passwordBox.Password = string.Empty;
                 return;
             }
 

@@ -16,14 +16,14 @@ namespace MVVM.Model.DTO.Response
         public int OrderId { get; set; }
         [ObservableProperty] private OrderResponse _order;
 
-        public CommandMvvm RemoveFromCart { get; set; }
+        //public CommandMvvm RemoveFromCart { get; set; }
 
-        public OrderStructureResponse()
-        {
-            RemoveFromCart = new CommandMvvm(() =>
-            {
-                new WindowRemoveFromCart(this, new ApiClient()).ShowDialog();
-            }, () => this != null);
-        }
+        //public OrderStructureResponse()
+        //{
+        //    RemoveFromCart = new CommandMvvm(() =>
+        //    {
+        //        new WindowRemoveFromCart(this, new ApiClient()).ShowDialog();
+        //    }, () => this != null);
+        //}
     }
 }

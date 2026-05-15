@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVM"
+        xmlns:view="clr-namespace:MVVM.View.NoAdmin"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Магазин стройматериалов" Height="450" Width="800" x:Name="qwe1" WindowStartupLocation="CenterScreen">
@@ -89,8 +90,8 @@
                                 <Border BorderThickness="1" BorderBrush="Black">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="340"/>
-                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="240"/>
+                                            <ColumnDefinition Width="200"/>
                                             <ColumnDefinition Width="60"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="20">
@@ -119,13 +120,15 @@
                                         </StackPanel>
                                     </Grid>
                                 </Border>
-                                <Button Width="60" Margin="10,0,0,0" Grid.Column="2">
-                                    <i:Interaction.Triggers>
+                                <Button Width="60" Margin="10,0,0,0" Grid.Column="2"
+                                Command="{Binding DataContext.AddToCart2Command, RelativeSource={RelativeSource AncestorType={x:Type view:MainWindow}}}" 
+                                CommandParameter="{Binding .}" >
+                                    <!--<i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Click">
                                             <i:InvokeCommandAction Command="{Binding AddToCart}" />
                                             <i:InvokeCommandAction Command="{Binding DataContext.AddToCart, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
                                         </i:EventTrigger>
-                                    </i:Interaction.Triggers>
+                                    </i:Interaction.Triggers>-->
                                     <TextBlock> Добавить <LineBreak/> в корзину</TextBlock>
                                 </Button>
                             </Grid>

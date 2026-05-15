@@ -15,13 +15,9 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="385"/>
+                                <ColumnDefinition Width="360"/>
                                 <ColumnDefinition Width="100"/>
                                 <ColumnDefinition Width="60"/>
                                 <ColumnDefinition/>
