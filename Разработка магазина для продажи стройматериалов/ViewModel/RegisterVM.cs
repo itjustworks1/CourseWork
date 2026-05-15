@@ -22,10 +22,10 @@ namespace Magaz_Stroitelya.ViewModel
         private string passwordTwo = string.Empty;
         private string error = "";
 
-        public string Login { get => login; set { login = value; Signal(); } }
-        public string Password { get => password; set { password = value; Signal(); } }
-        public string PasswordTwo { get => passwordTwo; set { passwordTwo = value; Signal(); } }
-        public string Error { get => error; set { error = value; Signal(); } }
+        public string Login { get => login; set { login = value; OnPropertyChanged(); } }
+        public string Password { get => password; set { password = value; OnPropertyChanged(); } }
+        public string PasswordTwo { get => passwordTwo; set { passwordTwo = value; OnPropertyChanged(); } }
+        public string Error { get => error; set { error = value; OnPropertyChanged(); } }
 
         public CommandMvvm RegisterCommand { get; set; }
         public RegisterVM(Window thisWindow, ApiClient apiClient, Window window)

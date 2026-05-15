@@ -31,12 +31,12 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         private ObservableCollection<ProductTypeParameterResponse> selectedProductTypeParametersOnProductType = new();
         private ProductTypeParameterResponse selectedProductTypeParameter;
 
-        public ProductTypeParameterResponse SelectedProductTypeParameter { get => selectedProductTypeParameter; set { selectedProductTypeParameter = value; Signal(); } }
-        public ObservableCollection<ProductTypeParameterResponse> ProductTypeParameters { get => productTypeParameters; set { productTypeParameters = value; Signal(); } }
-        public ObservableCollection<ProductTypeParameterResponse> SelectedProductTypeParametersOnProductType { get => selectedProductTypeParametersOnProductType; set { selectedProductTypeParametersOnProductType = value; Signal(); } }
-        public ObservableCollection<ParameterResponse> Parameters { get => parameters; set { parameters = value; Signal(); } }
-        public ObservableCollection<ProductTypeResponse> ProductTypes { get => productTypes; set { productTypes = value; Signal(); } }
-        public ParameterResponse SelectedParameter { get => selectedParameter; set { selectedParameter = value; Signal(); } }
+        public ProductTypeParameterResponse SelectedProductTypeParameter { get => selectedProductTypeParameter; set { selectedProductTypeParameter = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductTypeParameterResponse> ProductTypeParameters { get => productTypeParameters; set { productTypeParameters = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductTypeParameterResponse> SelectedProductTypeParametersOnProductType { get => selectedProductTypeParametersOnProductType; set { selectedProductTypeParametersOnProductType = value; OnPropertyChanged(); } }
+        public ObservableCollection<ParameterResponse> Parameters { get => parameters; set { parameters = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductTypeResponse> ProductTypes { get => productTypes; set { productTypes = value; OnPropertyChanged(); } }
+        public ParameterResponse SelectedParameter { get => selectedParameter; set { selectedParameter = value; OnPropertyChanged(); } }
         public ProductTypeResponse SelectedProductType 
         { 
             get => selectedProductType; 
@@ -47,7 +47,7 @@ namespace Magaz_Stroitelya.ViewModel.Admin
                 {
                     SelectPTP(value);
                 }
-                Signal();
+                OnPropertyChanged();
             } 
         }
 

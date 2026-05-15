@@ -14,7 +14,7 @@ namespace MVVM.Model.DTO.Response
         [ObservableProperty] private ProductResponse _product;
         //public ProductResponse Product { get; set; }
         public int OrderId { get; set; }
-        public OrderResponse Order { get; set; }
+        [ObservableProperty] private OrderResponse _order;
 
         public CommandMvvm RemoveFromCart { get; set; }
 

@@ -8,9 +8,12 @@ namespace MVVM.Model.DTO.Response
     public partial class ProductResponse : ObservableObject
     {
         public int Id { get; set; }
-        public string Title { get; set; } = null!;
-        public decimal Value { get; set; }
-        public int Quantity { get; set; }
+        [ObservableProperty] private string _title = null!;
+        //public string Title { get; set; } = null!;
+        //public decimal Value { get; set; }
+        [ObservableProperty] private decimal _value;
+        [ObservableProperty] private int _quantity;
+        //public int Quantity { get; set; }
         public int ProductTypeId { get; set; }
         [ObservableProperty] private ProductTypeResponse _productType;
 

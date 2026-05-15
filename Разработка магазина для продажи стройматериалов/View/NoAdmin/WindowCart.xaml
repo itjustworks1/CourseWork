@@ -16,8 +16,8 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid Margin="10">
-            <!--<TextBox Name="tb1" Height="24" MinWidth="400" MaxWidth="500" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="20"/>-->
+        <!--<Grid Margin="10">
+            --><!--<TextBox Name="tb1" Height="24" MinWidth="400" MaxWidth="500" Text="{Binding Search, UpdateSourceTrigger=PropertyChanged}" Margin="10,0" FontSize="20"/>-->
             <!--<TextBlock 
                    Text="Поиск"
                    IsHitTestVisible="False"
@@ -40,13 +40,13 @@
                         </Style.Triggers>
                     </Style>
                 </TextBlock.Style>
-            </TextBlock>-->
-        </Grid>
+            </TextBlock>--><!--
+        </Grid>-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Grid.ColumnSpan="2">
             <Button Width="100" Command="{Binding PlaceAnOrder}" Margin="30,0" FontSize="16">
                 <TextBlock> Оформить <LineBreak/> заказ</TextBlock>
             </Button>
-            <Button Width="100" Command="{Binding OpenOrder}" Margin="30,0" FontSize="16">
+            <Button Width="100" Command="{Binding OpenOrder2Command}" Margin="30,0" FontSize="16">
                 <TextBlock> Открыть <LineBreak/> список заказов</TextBlock>
             </Button>
         </StackPanel>
@@ -56,60 +56,54 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Border BorderThickness="1" BorderBrush="Black">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="500"/>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition Width="60"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{Binding Product.Title}" VerticalAlignment="Center" FontSize="20">
+                        <Border BorderThickness="1" BorderBrush="Black">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="500"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="60"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Product.Title}" VerticalAlignment="Center" FontSize="20">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick"
+                  Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
+                                    <TextBlock Text="{Binding Product.Value}" FontSize="20">
                                         <TextBlock.InputBindings>
                                             <MouseBinding MouseAction="LeftDoubleClick"
-                                          Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                  Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
                                         </TextBlock.InputBindings>
                                     </TextBlock>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="1">
-                                        <TextBlock Text="{Binding Product.Value}" FontSize="20">
-                                            <TextBlock.InputBindings>
-                                                <MouseBinding MouseAction="LeftDoubleClick"
-                                          Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
-                                            </TextBlock.InputBindings>
-                                        </TextBlock>
-                                        <TextBlock Text="р" FontSize="20"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="2">
-                                        <TextBlock Text="{Binding Quantity}" FontSize="16">
-                                            <TextBlock.InputBindings>
-                                                <MouseBinding MouseAction="LeftDoubleClick"
-                                          Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
-                                            </TextBlock.InputBindings>
-                                        </TextBlock>
-                                        <TextBlock Text="шт"  FontSize="16"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Border>
-                            <!--RemoveFromCart-->
-                            <!--<Button Width="60" Command="{Binding ElementName=qwe, Path=DataContext.RemoveFromCart}" Grid.Column="3">
-                                <TextBlock> Удалить <LineBreak/> из корзины</TextBlock>
-                            </Button>-->
-                            <Button Width="60" Margin="10,0,0,0" Grid.Column="2">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding RemoveFromCart}" />
-                                        <i:InvokeCommandAction Command="{Binding DataContext.RemoveFromCart, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <TextBlock> Удалить <LineBreak/> из корзины</TextBlock>
-                            </Button>
-                        </Grid>
+                                    <TextBlock Text="р" FontSize="20"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="2">
+                                    <TextBlock Text="{Binding Quantity}" FontSize="16">
+                                        <TextBlock.InputBindings>
+                                            <MouseBinding MouseAction="LeftDoubleClick"
+                  Command="{Binding DataContext.OpenProduct, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"/>
+                                        </TextBlock.InputBindings>
+                                    </TextBlock>
+                                    <TextBlock Text="шт"  FontSize="16"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <!--RemoveFromCart-->
+                        <!--<Button Width="60" Command="{Binding ElementName=qwe, Path=DataContext.RemoveFromCart}" Grid.Column="3">
+        <TextBlock> Удалить <LineBreak/> из корзины</TextBlock>
+    </Button>-->
+                        <Button Width="60" Margin="10,0,0,0" Grid.Column="2">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding RemoveFromCart}" />
+                                    <i:InvokeCommandAction Command="{Binding DataContext.RemoveFromCart, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <TextBlock> Удалить <LineBreak/> из корзины</TextBlock>
+                        </Button>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

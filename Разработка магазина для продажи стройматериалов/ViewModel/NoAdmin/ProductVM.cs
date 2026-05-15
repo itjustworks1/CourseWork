@@ -25,10 +25,10 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         private ObservableCollection<ProductParameterResponse> productParameters = new();
         private OrderStructureResponse orderStructure = new();
 
-        public OrderStructureResponse OrderStructure { get => orderStructure; set { orderStructure = value; Signal(); } }
-        public ObservableCollection<ProductParameterResponse> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
-        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
-        public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
+        public OrderStructureResponse OrderStructure { get => orderStructure; set { orderStructure = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductParameterResponse> ProductParameters { get => productParameters; set { productParameters = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; OnPropertyChanged(); } }
+        public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; OnPropertyChanged(); } }
 
         public CommandMvvm AddToCart { get; set; }
         public CommandMvvm EditProduct { get; set; }

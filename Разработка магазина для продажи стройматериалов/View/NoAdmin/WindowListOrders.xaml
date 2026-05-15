@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Magaz_Stroitelya.View"
+        xmlns:vm="clr-namespace:Magaz_Stroitelya.ViewModel.NoAdmin"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Список заказов" Height="450" Width="400" WindowStartupLocation="CenterScreen">
@@ -42,13 +43,15 @@
                             <!--<Button Width="60" Command="{Binding DataContext.AddToCart, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
                                      Grid.Column="3">
                             </Button>-->
-                            <Button Width="60" Content="Редактировать" Margin="10,0,0,0" Grid.Column="2">
-                                <i:Interaction.Triggers>
+                            <Button Width="60" Content="Редактировать" 
+                                    Command="{Binding DataContext.EditOrder2Command, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=vm:ListUsersVM}}" 
+                                    CommandParameter="{Binding .}" Margin="10,0,0,0" Grid.Column="2">
+                                <!--<i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding EditOrder}" />
-                                        <i:InvokeCommandAction Command="{Binding DataContext.EditOrder, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />
+                                        <i:InvokeCommandAction  />
+                                        --><!--<i:InvokeCommandAction Command="{Binding DataContext.EditOrder, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" />--><!--
                                     </i:EventTrigger>
-                                </i:Interaction.Triggers>
+                                </i:Interaction.Triggers>-->
                             </Button>
 
                             <!--<TextBlock VerticalAlignment="Center" Text="Редактировать" Grid.Column="3" FontSize="20">

@@ -21,8 +21,8 @@ namespace Magaz_Stroitelya.ViewModel
         private string error = "";
         bool isLogin = false;
 
-        public string Login { get => login; set { login = value; Signal(); } }
-        public string Error { get => error; set { error = value; Signal(); } }
+        public string Login { get => login; set { login = value; OnPropertyChanged(); } }
+        public string Error { get => error; set { error = value; OnPropertyChanged(); } }
 
         public CommandMvvm LoginCommand { get; set; }
         public CommandMvvm RegisterCommand { get; set; }

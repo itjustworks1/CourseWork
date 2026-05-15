@@ -23,11 +23,11 @@ namespace MVVM.ViewModel.Admin
         private ObservableCollection<OrderResponse> orders = new();
         private ObservableCollection<OrderResponse> ordersWithoutCart = new();
 
-        public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; Signal(); } }
-        public ObservableCollection<OrderResponse> OrdersWithoutCart { get => ordersWithoutCart; set { ordersWithoutCart = value; Signal(); } }
+        public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; OnPropertyChanged(); } }
+        public ObservableCollection<OrderResponse> OrdersWithoutCart { get => ordersWithoutCart; set { ordersWithoutCart = value; OnPropertyChanged(); } }
 
-        public OrderResponse SelectedOrder { get => selectedOrder; set { selectedOrder = value; Signal(); } }
-        public UserResponse SelectedUser { get => selectedUser; set { selectedUser = value; Signal(); } }
+        public OrderResponse SelectedOrder { get => selectedOrder; set { selectedOrder = value; OnPropertyChanged(); } }
+        public UserResponse SelectedUser { get => selectedUser; set { selectedUser = value; OnPropertyChanged(); } }
 
         //public CommandMvvm EditOrder { get; set; }//s?
         public CommandMvvm OpenOrder { get; set; }

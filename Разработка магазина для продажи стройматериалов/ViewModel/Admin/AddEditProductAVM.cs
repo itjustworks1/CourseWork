@@ -30,9 +30,9 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         private ObservableCollection<ParameterResponse> parameters = new();
         private ObservableCollection<ProductParameterResponse> selectedSelectedProductParameters = new();
 
-        public ObservableCollection<ProductParameterResponse> SelectedSelectedProductParameters { get => selectedSelectedProductParameters; set { selectedSelectedProductParameters = value; Signal(); } }
-        public ObservableCollection<ParameterResponse> Parameters { get => parameters; set { parameters = value; Signal(); } }
-        public ObservableCollection<ProductParameterResponse> SelectedProductParameters { get => selectedProductParameters; set { selectedProductParameters = value; Signal(); } }
+        public ObservableCollection<ProductParameterResponse> SelectedSelectedProductParameters { get => selectedSelectedProductParameters; set { selectedSelectedProductParameters = value; OnPropertyChanged(); } }
+        public ObservableCollection<ParameterResponse> Parameters { get => parameters; set { parameters = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductParameterResponse> SelectedProductParameters { get => selectedProductParameters; set { selectedProductParameters = value; OnPropertyChanged(); } }
         public ProductParameterResponse SelectedProductParameter 
         {
             get => selectedProductParameter; 
@@ -58,8 +58,8 @@ namespace Magaz_Stroitelya.ViewModel.Admin
                 }
             } 
         }
-        public ProductParameterResponse EditProductParameter { get => editProductParameter; set { editProductParameter = value; Signal(); } }
-        public ObservableCollection<ProductParameterResponse> ProductParameters { get => productParameters; set { productParameters = value; Signal(); } }
+        public ProductParameterResponse EditProductParameter { get => editProductParameter; set { editProductParameter = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductParameterResponse> ProductParameters { get => productParameters; set { productParameters = value; OnPropertyChanged(); } }
         public ObservableCollection<ProductTypeResponse> ProductTypes { get => productTypes; 
             set 
             {
@@ -67,10 +67,10 @@ namespace Magaz_Stroitelya.ViewModel.Admin
                 productTypes = value;
                 SelectedProduct.ProductType = productTypes.FirstOrDefault(s => s.Id == id);
                 SelectedProduct.ProductTypeId = id;
-                Signal();
+                OnPropertyChanged();
             } 
         }
-        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
+        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; OnPropertyChanged(); } }
         [ObservableProperty] private ProductResponse _selectedProduct;
 
         public CommandMvvm Save { get; set; }

@@ -19,8 +19,8 @@ namespace Magaz_Stroitelya.ViewModel.Admin
         private ParameterResponse selectedParameter;
         private ObservableCollection<ParameterResponse> parameters = new();
 
-        public ObservableCollection<ParameterResponse> Parameters { get => parameters; set { parameters = value; Signal(); } }
-        public ParameterResponse SelectedParameter { get => selectedParameter; set { selectedParameter = value; Signal(); } }
+        public ObservableCollection<ParameterResponse> Parameters { get => parameters; set { parameters = value; OnPropertyChanged(); } }
+        public ParameterResponse SelectedParameter { get => selectedParameter; set { selectedParameter = value; OnPropertyChanged(); } }
 
         public CommandMvvm AddParameter { get; set; }
         public CommandMvvm EditParameter { get; set; }

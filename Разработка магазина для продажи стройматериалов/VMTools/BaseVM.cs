@@ -9,11 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Magaz_Stroitelya.VMTools
 {
-    public class BaseVM : ObservableObject, INotifyPropertyChanged
+    public class BaseVM : ObservableObject
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected void Signal([CallerMemberName] string name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

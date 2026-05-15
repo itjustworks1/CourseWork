@@ -25,11 +25,11 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         private decimal value;
         private OrderStructureResponse selectedOrderStructure;
 
-        public OrderStructureResponse SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; Signal(); } }
-        public decimal Value { get => value; set { this.value = value; Signal(); } }
-        public ObservableCollection<OrderStructureResponse> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
-        public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; Signal(); } }
-        public OrderResponse SelectedOrder { get => selectedOrder; set { selectedOrder = value; Signal(); } }
+        public OrderStructureResponse SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; OnPropertyChanged(); } }
+        public decimal Value { get => value; set { this.value = value; OnPropertyChanged(); } }
+        public ObservableCollection<OrderStructureResponse> OrderStructures { get => orderStructures; set { orderStructures = value; OnPropertyChanged(); } }
+        public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; OnPropertyChanged(); } }
+        public OrderResponse SelectedOrder { get => selectedOrder; set { selectedOrder = value; OnPropertyChanged(); } }
 
         public CommandMvvm RemoveOrder { get; set; }
         public CommandMvvm OpenProduct { get; set; }

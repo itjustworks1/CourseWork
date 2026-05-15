@@ -20,7 +20,7 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         private ObservableCollection<OrderResponse> orders = new();
         //private ObservableCollection<OrderStructure> orderStructures;
 
-        public int Quantity { get => quantity; set { quantity = value; Signal(); } }
+        public int Quantity { get => quantity; set { quantity = value; OnPropertyChanged(); } }
         //public ObservableCollection<OrderStructure> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
         public CommandMvvm Save { get; set; }
         public CommandMvvm Cancel { get; set; }

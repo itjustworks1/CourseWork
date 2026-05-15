@@ -42,11 +42,11 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         private string search;
         private ObservableCollection<Filter> filters;
 
-        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
-        public ObservableCollection<ProductResponse> SearchProducts { get => searchProducts; set { searchProducts = value; Signal(); } }
-        public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; Signal(); } }
+        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductResponse> SearchProducts { get => searchProducts; set { searchProducts = value; OnPropertyChanged(); } }
+        public ProductResponse SelectedProduct { get => selectedProduct; set { selectedProduct = value; OnPropertyChanged(); } }
         public string Search { get => search; set { search = value; SearchProduct(search); } }
-        public ObservableCollection<Filter> Filters { get => filters; set { filters = value; Signal(); } }
+        public ObservableCollection<Filter> Filters { get => filters; set { filters = value; OnPropertyChanged(); } }
 
         public CommandMvvm AddToCart { get; set; }
         public CommandMvvm OpenCart { get; set; }

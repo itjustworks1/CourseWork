@@ -23,8 +23,8 @@ namespace MVVM.ViewModel.Admin
         private ObservableCollection<UserResponse> users;
         private UserResponse selectedUser;
 
-        public UserResponse SelectedUser { get => selectedUser; set { selectedUser = value; Signal(); } }
-        public ObservableCollection<UserResponse> Users { get => users; set { users = value; Signal(); } }
+        public UserResponse SelectedUser { get => selectedUser; set { selectedUser = value; OnPropertyChanged(); } }
+        public ObservableCollection<UserResponse> Users { get => users; set { users = value; OnPropertyChanged(); } }
 
         public CommandMvvm OpenUser { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Magaz_Stroitelya.Services;
 //using Magaz_Stroitelya.DB;
 //using Magaz_Stroitelya.Model;
@@ -16,28 +17,47 @@ using System.Windows.Controls;
 
 namespace Magaz_Stroitelya.ViewModel.NoAdmin
 {
-    public partial class CartVM : BaseVM
+    public partial class CartVM : ObservableObject
     {
         private ApiClient apiClient;
         private Window thisWindow;
 
         private ObservableCollection<OrderResponse> orders = new();
-        private ObservableCollection<OrderStructureResponse> orderStructures;
+        //private ObservableCollection<OrderStructureResponse> orderStructures;
         private OrderStructureResponse selectedOrderStructure;
         private ObservableCollection<ProductResponse> products = new();
-        private string search;
 
         [ObservableProperty] private ObservableCollection<OrderStructureResponse> _orderStructures;
         //public ObservableCollection<OrderStructureResponse> OrderStructures { get => orderStructures; set { orderStructures = value; Signal(); } }
-        public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; Signal(); } }
-        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; Signal(); } }
-        public OrderStructureResponse SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; Signal(); } }
+        public ObservableCollection<OrderResponse> Orders { get => orders; set { orders = value; OnPropertyChanged(); } }
+        public ObservableCollection<ProductResponse> Products { get => products; set { products = value; OnPropertyChanged(); } }
+        public OrderStructureResponse SelectedOrderStructure { get => selectedOrderStructure; set { selectedOrderStructure = value; OnPropertyChanged(); } }
 
         public CommandMvvm PlaceAnOrder { get; set; }
         public CommandMvvm RemoveFromCart { get; set; }
         public CommandMvvm OpenOrder { get; set; }
         public CommandMvvm OpenProduct { get; set; }
         public CommandMvvm Close { get; set; }
+
+        [RelayCommand]
+        private async Task OpenOrder2()
+        {
+            hide();
+            new WindowListOrders(apiClient).ShowDialog();
+            Thread.Sleep(2000);
+            Task.Run(() => SelectAll());
+            thisWindow.ShowDialog();
+        }
+
+        [RelayCommand]
+        private async Task RemoveFromCart2(OrderStructureResponse orderStructure)
+        {
+            hide();
+            new WindowRemoveFromCart(orderStructure, apiClient).ShowDialog();
+            Thread.Sleep(2000);
+            Task.Run(() => SelectAll());
+            thisWindow.ShowDialog();
+        }
 
         public CartVM(Window thisWindow, ApiClient apiClient)
         {

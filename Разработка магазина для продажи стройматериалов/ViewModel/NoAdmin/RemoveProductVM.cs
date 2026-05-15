@@ -18,7 +18,7 @@ namespace Magaz_Stroitelya.ViewModel.NoAdmin
         ApiClient apiClient;
         private int quantity;
 
-        public int Quantity { get => quantity; set { quantity = value; Signal(); } }
+        public int Quantity { get => quantity; set { quantity = value; OnPropertyChanged(); } }
 
         public CommandMvvm Remove { get; set; }
         public CommandMvvm Cancel { get; set; }
