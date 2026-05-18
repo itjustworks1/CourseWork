@@ -42,7 +42,15 @@ namespace MVVM.ViewModel.NoAdmin
                 var pOrderStructure = new ObservableCollection<OrderStructureResponse>( rOrderStructures.Where(s => rProducts.Select(s => s.Id).Contains(s.ProductId)));
                 foreach (var structure in pOrderStructure)
                 {
-                    rProducts.FirstOrDefault(s => s.Id == structure.ProductId).Quantity = structure.Product.Quantity;
+                    var prod = rProducts.FirstOrDefault(s => s.Id == structure.ProductId);
+                    prod.Quantity += structure.Quantity;
+                    await apiClient.PatchProduct(prod.Id, new ProductRequest
+                    {
+                        Quantity = prod.Quantity,
+                        ProductTypeId = prod.ProductTypeId,
+                        Title = prod.Title,
+                        Value = prod.Value
+                    });
                 }
                 foreach (var o in rOrderStructures)
                     await apiClient.DeleteOrderStructure(o.Id);

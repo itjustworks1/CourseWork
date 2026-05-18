@@ -64,6 +64,12 @@
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <!-- Запрещает фокус, что делает выбор невозможным -->
+                            <Setter Property="Focusable" Value="False" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                 </ListBox>
             </StackPanel>
         </Border>
